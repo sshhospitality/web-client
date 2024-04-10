@@ -91,34 +91,61 @@ export default function DashboardAppPage() {
       }
     }
     async function fetchChartData() {
-      try{
+      try {
         const response = await axios.post(
           'http://localhost:5000/api/verify/chartdetails',
           { xhrFields: { withCredentials: true } },
           { withCredentials: true }
         );
         const chartDetails = response.data.mealTypeCountsByMonth;
-        const formattedChartData = chartData[0].mealTypeCounts.map((item, index) => ({
+        console.log(chartDetails[0].mealTypeCounts);
+    
+        const formattedChartData = chartDetails[0].mealTypeCounts.map((item) => ({
           label: item.mealType,
           value: item.count,
         }));
         setChartData(formattedChartData);
-        // Update state with formatted data
-        setChartData(formattedChartData);
-        // chartDetails = chartDetails.reverse();
-        // Extract data for each meal type from the last 6 elements of chartDetails array
-        // const chartDetails = chartDetails.slice(-6);
-        // console.log(chartDetails);
-        setBreakfastCounts(chartDetails.map(item => item.mealTypeCounts.find(count => count.mealType === 'Breakfast')?.count || 0));
-        setLunchCounts(chartDetails.map(item => item.mealTypeCounts.find(count => count.mealType === 'lunch')?.count || 0));
-        console.log(lunchCounts);
-
-        setGrace1LunchCounts(chartDetails.map(item => item.mealTypeCounts.find(count => count.mealType === 'Grace1_Lunch')?.count || 0));
-        setGrace2LunchCounts(chartDetails.map(item => item.mealTypeCounts.find(count => count.mealType === 'Grace2_Lunch')?.count || 0));
-        setSnacksCounts(chartDetails.map(item => item.mealTypeCounts.find(count => count.mealType === 'snacks')?.count || 0));
-        setDinnerCounts(chartDetails.map(item => item.mealTypeCounts.find(count => count.mealType === 'dinner')?.count || 0));
-        setgrace1DinnerCounts(chartDetails.map(item => item.mealTypeCounts.find(count => count.mealType === 'grace1_dinner')?.count || 0));
-      } catch(error) {
+    
+        // Initialize an object to store counts for each meal type
+        const mealTypeCounts = {
+          Breakfast: [],
+          lunch: [],
+          Grace1_Lunch: [],
+          Grace2_Lunch: [],
+          snacks: [],
+          dinner: [],
+          grace1_dinner: [],
+        };
+    
+        // Populate counts for each meal type
+        for (let i = 0; i < 6; i+=1) {
+          if(chartDetails[i]){
+          const monthData = chartDetails[i];
+          
+          Object.keys(mealTypeCounts).forEach((mealType) => {
+            const countObj = monthData.mealTypeCounts.find((count) => count.mealType === mealType);
+            mealTypeCounts[mealType].push(countObj ? countObj.count : 0);
+          });
+        }
+        else{
+          Object.keys(mealTypeCounts).forEach((mealType) => {
+            // const countObj = monthData.mealTypeCounts.find((count) => count.mealType === mealType);
+            mealTypeCounts[mealType].push(0);
+          });
+        }
+        }
+    
+        // Set state variables for each meal type
+        setBreakfastCounts(mealTypeCounts.Breakfast);
+        setLunchCounts(mealTypeCounts.lunch);
+        setGrace1LunchCounts(mealTypeCounts.Grace1_Lunch);
+        setGrace2LunchCounts(mealTypeCounts.Grace2_Lunch);
+        setSnacksCounts(mealTypeCounts.snacks);
+        setDinnerCounts(mealTypeCounts.dinner);
+        setgrace1DinnerCounts(mealTypeCounts.grace1_dinner);
+    
+        console.log(mealTypeCounts.lunch);
+      } catch (error) {
         console.log(error);
       }
     }
@@ -266,49 +293,49 @@ export default function DashboardAppPage() {
                   type: 'bar',
                   stackId: 'monthly',
                   fill: 'solid',
-                  data: breakfastCounts, // Replace with the array of lunch counts for each month
+                  data: breakfastCounts.reverse(), // Replace with the array of lunch counts for each month
                 },
                 {
                   name: 'Lunch',
                   type: 'bar',
                   stackId: 'monthly',
                   fill: 'solid',
-                  data: lunchCounts, // Replace with the array of lunch counts for each month
+                  data: lunchCounts.reverse(), // Replace with the array of lunch counts for each month
                 },
                 {
                   name: 'Grace1 Lunch',
                   type: 'bar',
                   stackId: 'monthly',
                   fill: 'solid',
-                  data: grace1LunchCounts, // Replace with the array of grace1 lunch counts for each month
+                  data: grace1LunchCounts.reverse(), // Replace with the array of grace1 lunch counts for each month
                 },
                 {
                   name: 'Grace2 Lunch',
                   type: 'bar',
                   stackId: 'monthly',
                   fill: 'solid',
-                  data: grace2LunchCounts, // Replace with the array of grace2 lunch counts for each month
+                  data: grace2LunchCounts.reverse(), // Replace with the array of grace2 lunch counts for each month
                 },
                 {
                   name: 'Snacks',
                   type: 'bar',
                   stackId: 'monthly',
                   fill: 'solid',
-                  data: snacksCounts, // Replace with the array of lunch counts for each month
+                  data: snacksCounts.reverse(), // Replace with the array of lunch counts for each month
                 },
                 {
                   name: 'Dinner',
                   type: 'bar',
                   stackId: 'monthly',
                   fill: 'solid',
-                  data: dinnerCounts, // Replace with the array of dinner counts for each month
+                  data: dinnerCounts.reverse(), // Replace with the array of dinner counts for each month
                 },
                 {
                   name: 'Grace1 Dinner',
                   type: 'bar',
                   stackId: 'monthly',
                   fill: 'solid',
-                  data: grace1DinnerCounts, // Replace with the array of grace1 dinner counts for each month
+                  data: grace1DinnerCounts.reverse(), // Replace with the array of grace1 dinner counts for each month
                 }
               ]}
             />

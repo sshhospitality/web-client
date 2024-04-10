@@ -27,8 +27,9 @@ export default function AppWebsiteVisits({ title, subheader, chartData, ...other
     if(monthIndex===11 && i>0) year = currentYear-1;
     labels.push(`${months[monthIndex]} ${year}`); // Add month name with year to labels
   }
+  
   console.log(currentYear);
-  console.log(labels)
+  // console.log(labels)
   const chartOptions = useChart({
     chart: {
       type: 'bar',
@@ -45,7 +46,7 @@ export default function AppWebsiteVisits({ title, subheader, chartData, ...other
     },
     labels: labels.reverse(), // Reverse the labels array to display oldest month on the left
     xaxis: {
-      categories: labels, // Use the reversed labels
+      categories:labels, // Use the reversed labels
     },
     dataLabels: {
       enabled: true,

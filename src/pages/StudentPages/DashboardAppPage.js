@@ -41,6 +41,7 @@ export default function DashboardAppPage() {
   const [snacksCounts,setSnacksCounts] = useState([]);
   const [dinnerCounts,setDinnerCounts] = useState([]);
   const [grace1DinnerCounts, setgrace1DinnerCounts] = useState([]);
+  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -97,6 +98,13 @@ export default function DashboardAppPage() {
           { withCredentials: true }
         );
         const chartDetails = response.data.mealTypeCountsByMonth;
+        const formattedChartData = chartData[0].mealTypeCounts.map((item, index) => ({
+          label: item.mealType,
+          value: item.count,
+        }));
+        setChartData(formattedChartData);
+        // Update state with formatted data
+        setChartData(formattedChartData);
         // chartDetails = chartDetails.reverse();
         // Extract data for each meal type from the last 6 elements of chartDetails array
         // const chartDetails = chartDetails.slice(-6);
@@ -310,13 +318,7 @@ export default function DashboardAppPage() {
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits
               title="Dinning Chart"
-              chartData={[
-                // { label: 'Basic Consumed', value: basicConsumed },
-                // { label: 'Basic Wasted', value: basicTotal - basicConsumed },
-                { label: 'Basic Left', value: 11520 - basicTotal },
-                { label: 'Add-On Consumed', value: amtSum },
-                { label: 'Add-On Left', value: totalAmount - amtSum - 11520 },
-              ]}
+              chartData = {chartData}
               chartColors={[
                 theme.palette.primary.main,
                 theme.palette.info.main,

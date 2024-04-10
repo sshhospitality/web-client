@@ -102,7 +102,7 @@ export default function DashboardAppPage() {
         // const chartDetails = chartDetails.slice(-6);
         // console.log(chartDetails);
         setBreakfastCounts(chartDetails.map(item => item.mealTypeCounts.find(count => count.mealType === 'Breakfast')?.count || 0));
-        setLunchCounts(chartDetails.map(item => item.mealTypeCounts.find(count => count.mealType === 'Lunch')?.count || 0));
+        setLunchCounts(chartDetails.map(item => item.mealTypeCounts.find(count => count.mealType === 'lunch')?.count || 0));
         console.log(lunchCounts);
 
         setGrace1LunchCounts(chartDetails.map(item => item.mealTypeCounts.find(count => count.mealType === 'Grace1_Lunch')?.count || 0));

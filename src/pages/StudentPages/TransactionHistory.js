@@ -83,8 +83,8 @@ export default function TransactionHistory() {
           { from: txnFrom, to: txnTo },
           { withCredentials: true, cancelToken: cancelTokenSourceRef.current.token }
         );
-
         setTxn(res.data);
+        console.log(res.data);
       } catch (error) {
         if (axios.isCancel(error)) {
           console.log('Request canceled', error.message);
@@ -174,6 +174,7 @@ export default function TransactionHistory() {
           },
           { withCredentials: true, cancelToken: cancelTokenSourceRef.current.token }
         );
+        console.log(res.data);
         setTxn(res.data);
         localStorage.setItem('txn', res.data);
       } catch (error) {

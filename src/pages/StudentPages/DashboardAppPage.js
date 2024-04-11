@@ -42,6 +42,7 @@ export default function DashboardAppPage() {
   const [dinnerCounts,setDinnerCounts] = useState([]);
   const [grace1DinnerCounts, setgrace1DinnerCounts] = useState([]);
   const [chartData, setChartData] = useState([]);
+  const [dayWise, setDayWise] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -63,18 +64,6 @@ export default function DashboardAppPage() {
         setTotal(user.total_amount);
         const trxnHis = await trnxList(user.id);
         setTxn(trxnHis);
-
-        const menu = await axios.post(
-          'http://localhost:5000/api/menu/list',
-          {
-            xhrFields: {
-              withCredentials: true,
-            },
-          },
-          { withCredentials: true }
-        );
-
-        setMenu(menu.data);
       } catch (error) {
         // Handle errors, such as token validation failure or network issues
         localStorage.clear();
@@ -150,9 +139,36 @@ export default function DashboardAppPage() {
       }
     }
     
-    
+    async function getMenu(){
+      try {
+        const { data } = await axios.post(
+          'http://localhost:5000/api/menu/list',
+          {
+            xhrFeilds: {
+              withCredentials: true,
+            },
+          },
+          { withCredentials: true }
+        );
+        setMenu(data);
+        console.log(data)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    async function getDayWiseMeal(){
+      const response = await axios.post(
+        'http://localhost:5000/api/verify/mealtimeline',
+        { xhrFields: { withCredentials: true } },
+        { withCredentials: true }
+      );
+      console.log(response.data.transactions);
+      setDayWise(response.data.transactions);
+    }
     fetchData();
     fetchChartData();
+    getMenu();
+    getDayWiseMeal();
   }, [navigate]); // Empty dependency array, runs once on mount
   useEffect(() => {
     menu.forEach((d) => {
@@ -178,68 +194,68 @@ export default function DashboardAppPage() {
     image: `/assets/images/covers/cover_${index + 1}.avif`,
   }));
 
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-  const isoSevenDaysAgo = sevenDaysAgo.toISOString().split('T')[0]; // Get only the date part
-  const filteredData = txn.filter((item) => {
-    const trnsDate = new Date(item.transaction_date).toISOString().split('T')[0]; // Get only the date part
-    return trnsDate >= isoSevenDaysAgo && trnsDate <= new Date().toISOString().split('T')[0]; // Get only the date part
-  });
-  const sumsByDate = {};
+  // const sevenDaysAgo = new Date();
+  // sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  // const isoSevenDaysAgo = sevenDaysAgo.toISOString().split('T')[0]; // Get only the date part
+  // const filteredData = txn.filter((item) => {
+  //   const trnsDate = new Date(item.transaction_date).toISOString().split('T')[0]; // Get only the date part
+  //   return trnsDate >= isoSevenDaysAgo && trnsDate <= new Date().toISOString().split('T')[0]; // Get only the date part
+  // });
+  // const sumsByDate = {};
 
-  filteredData.forEach((item) => {
-    const trnsDate = new Date(item.transaction_date).toISOString().split('T')[0]; // Get only the date part
+  // filteredData.forEach((item) => {
+  //   const trnsDate = new Date(item.transaction_date).toISOString().split('T')[0]; // Get only the date part
 
-    if (Object.prototype.hasOwnProperty.call(sumsByDate, trnsDate)) {
-      sumsByDate[trnsDate] += parseFloat(item.amount); // Add the amount to the existing sum for the date
-    } else {
-      sumsByDate[trnsDate] = parseFloat(item.amount); // Initialize the sum for the date
-    }
-  });
-  function countDays() {
-    // Define the start date (August 2nd)
-    const startDate = new Date('2023-12-28');
-    // Get the current date
-    const currentDate = new Date();
-    // Calculate the time difference in milliseconds
-    const timeDifference = currentDate - startDate;
-    // Calculate the number of days by dividing milliseconds by (1000ms * 60s * 60min * 24h)
-    const numberOfDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    return numberOfDays;
-  }
-  const basicTotal = countDays() * 96;
-  // Convert the sumsByDate object into an array of objects with date and sum
-  const sumsArray = Object.keys(sumsByDate).map((date) => sumsByDate[date]);
-  const amtSum = txn
-    .filter((item) => item.remarks !== 'Recharge')
-    .reduce((sum, item) => sum + parseFloat(item.amount), 0);
+  //   if (Object.prototype.hasOwnProperty.call(sumsByDate, trnsDate)) {
+  //     sumsByDate[trnsDate] += parseFloat(item.amount); // Add the amount to the existing sum for the date
+  //   } else {
+  //     sumsByDate[trnsDate] = parseFloat(item.amount); // Initialize the sum for the date
+  //   }
+  // });
+  // function countDays() {
+  //   // Define the start date (August 2nd)
+  //   const startDate = new Date('2023-12-28');
+  //   // Get the current date
+  //   const currentDate = new Date();
+  //   // Calculate the time difference in milliseconds
+  //   const timeDifference = currentDate - startDate;
+  //   // Calculate the number of days by dividing milliseconds by (1000ms * 60s * 60min * 24h)
+  //   const numberOfDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  //   return numberOfDays;
+  // }
+  // const basicTotal = countDays() * 96;
+  // // Convert the sumsByDate object into an array of objects with date and sum
+  // const sumsArray = Object.keys(sumsByDate).map((date) => sumsByDate[date]);
+  // const amtSum = txn
+  //   .filter((item) => item.remarks !== 'Recharge')
+  //   .reduce((sum, item) => sum + parseFloat(item.amount), 0);
 
-  useEffect(() => {
-    // Function to format the date in the required format
-    const formatDate = (date) => {
-      const options = {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true,
-      };
-      return new Date(date).toLocaleDateString('en-US', options);
-    };
+  // useEffect(() => {
+  //   // Function to format the date in the required format
+  //   const formatDate = (date) => {
+  //     const options = {
+  //       year: 'numeric',
+  //       month: 'short',
+  //       day: 'numeric',
+  //       hour: 'numeric',
+  //       minute: 'numeric',
+  //       hour12: true,
+  //     };
+  //     return new Date(date).toLocaleDateString('en-US', options);
+  //   };
 
-    // Function to update the timeline state
-    const updateTimeline = () => {
-      const updatedTimeline = txn.map((transaction) => ({
-        category: transaction.category,
-        time: formatDate(transaction.transaction_date),
-      }));
-      setTimeline(updatedTimeline);
-    };
+  //   // Function to update the timeline state
+  //   const updateTimeline = () => {
+  //     const updatedTimeline = txn.map((transaction) => ({
+  //       category: transaction.category,
+  //       time: formatDate(transaction.transaction_date),
+  //     }));
+  //     setTimeline(updatedTimeline);
+  //   };
 
-    // Call the updateTimeline function
-    updateTimeline();
-  }, [txn]);
+  //   // Call the updateTimeline function
+  //   updateTimeline();
+  // }, [txn]);
   return (
     <>
       <Helmet>
@@ -364,22 +380,11 @@ export default function DashboardAppPage() {
           <Grid item xs={12} md={6} lg={4}>
             <AppOrderTimeline
               title="Meal Timeline"
-              list={timeline
-                .filter((item) => {
-                  // Check if the transaction date belongs to the current date
-                  const currentDate = new Date();
-                  const transactionDate = new Date(item.time);
-                  return (
-                    currentDate.getDate() === transactionDate.getDate() &&
-                    currentDate.getMonth() === transactionDate.getMonth() &&
-                    currentDate.getFullYear() === transactionDate.getFullYear()
-                  );
-                })
+              list={dayWise
                 .map((item, index) => ({
-                  id: item.id,
-                  title: item.category, // Set title to the 'category' from timeline
-                  type: `order${index + 1}`,
-                  time: item.time,
+                  // id: item.id,
+                  title: item.meal_items, 
+                  time: item.mealType,
                 }))}
             />
           </Grid>

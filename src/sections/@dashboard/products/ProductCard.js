@@ -24,7 +24,7 @@ ShopProductCard.propTypes = {
   product: PropTypes.object,
 };
 
-export default function ShopProductCard({ name, price, category, type, time }) {
+export default function ShopProductCard({ name, category, type}) {
   // const { names, cover, prices, colors, status, priceSale } = product;
   // console.log(category);
   const col = type === "Veg" ?  ["green"] :["red"] ;
@@ -37,10 +37,10 @@ export default function ShopProductCard({ name, price, category, type, time }) {
         {/* {status && ( */}
           <Label
             variant="filled"
-            color={category === "Basic" ? "info" : "error"}
+            color={category === "Veg" ? "success" : "error"}
             sx={{
               zIndex: 9,
-              top: 16,
+              top: 300,
               right: 16,
               position: 'absolute',
               textTransform: 'uppercase',
@@ -54,32 +54,10 @@ export default function ShopProductCard({ name, price, category, type, time }) {
 
       <Stack spacing={2} sx={{ p: 3 }}>
         <Link color="inherit" underline="hover">
-          <Typography variant="subtitle2" noWrap>
+          <Typography variant="subtitle2" noWrap sx={{ fontSize: '1.2rem', textTransform: 'uppercase' }}>
             {name}
           </Typography>
         </Link>
-
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={col} />
-          {/* <ColorSinglePicker color={"red"}/> */}
-          <Typography variant="subtitle1">
-            {time}
-          </Typography>
-          <Typography variant="subtitle1">
-            <Typography
-              component="span"
-              variant="body1"
-              sx={{
-                color: 'text.disabled',
-                textDecoration: 'line-through',
-              }}
-            >
-              {/* {price && fCurrency(price)} */}
-            </Typography>
-            &nbsp;
-            ₹{price}
-          </Typography>
-        </Stack>
       </Stack>
     </Card>
   );

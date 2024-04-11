@@ -36,10 +36,9 @@ export default function ProductsPage() {
 
   async function menuList() {
     try {      
-      const response = await axios.post('http://localhost:5000/api/menu/list', {             
-      },{ withCredentials: true});
+      const response = await axios.get('http://localhost:5000/api/menu/list');
       const {data} = response;      
-
+      console.log(response);
       setMenu(data);
     } catch (error) {
       console.log(error);

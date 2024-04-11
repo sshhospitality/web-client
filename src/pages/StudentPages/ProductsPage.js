@@ -21,7 +21,7 @@ export default function ProductsPage() {
 
   async function menuList() {
     try {
-      const { data } = await axios.post(
+      const { data } = await axios.get(
         'http://localhost:5000/api/menu/list',
         {
           xhrFeilds: {
@@ -31,6 +31,7 @@ export default function ProductsPage() {
         { withCredentials: true }
       );
       setMenu(data);
+      console.log(data)
     } catch (error) {
       console.log(error);
     }
@@ -92,10 +93,7 @@ export default function ProductsPage() {
                     <ProductCard
                       key={index}
                       name={i.name}
-                      price={i.price}
                       category={i.category}
-                      type={i.type}
-                      time={item.type}
                     />
                   ))}
                 </div>

@@ -10,20 +10,36 @@ import dayjs from 'dayjs';
 import { handleCustomAlert } from '../../components/handleCustomAlert';
 // sections
 import Upload from '../../components/Upload';
-import { AppCurrentVisits } from '../../sections/@dashboard/app';
+import { AppNewsUpdate, AppCurrentVisits, AppWebsiteVisits ,AppCurrentDay} from '../../sections/@dashboard/app';
 
 // ----------------------------------------------------------------------
-
+function getCurrentDay() {
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const currentDate = new Date();
+  const currentDayIndex = currentDate.getDay();
+  return daysOfWeek[currentDayIndex];
+}
 export default function DashboardAppPage() {
   const navigate = useNavigate();
   const theme = useTheme();
+  const [day, setday] = useState(getCurrentDay());
   const [basicChartData, setBasicChartData] = useState([{ label: 'No Data', value: 0 }]);
   const [addOnChartData, setAddOnChartData] = useState([{ label: 'No Data', value: 0 }]);
   const [basicTo, setBasicTo] = useState(dayjs());
   const [addOnTo, setAddOnTo] = useState(dayjs());
   const [basicFrom, setBasicFrom] = useState(dayjs().subtract(1, 'month').add(1, 'day'));
   const [addOnFrom, setAddOnFrom] = useState(dayjs().subtract(1, 'month').add(1, 'day'));
-
+  const [breakfastCounts,setBreakfastCounts] = useState([]);
+  const [lunchCounts,setLunchCounts] = useState([]);
+  const [grace1LunchCounts,setGrace1LunchCounts] = useState([]);
+  const [grace2LunchCounts,setGrace2LunchCounts] = useState([]);
+  const [snacksCounts,setSnacksCounts] = useState([]);
+  const [dinnerCounts,setDinnerCounts] = useState([]);
+  const [grace1DinnerCounts, setgrace1DinnerCounts] = useState([]);
+  const [chartData, setChartData] = useState([]);
+  const [dayWiseData, setDayWiseData] = useState([]);
+  const [todaymenu, updtmenu] = useState([]);
+  const [menu, setMenu] = useState([]);
   useEffect(() => {
     async function fetchData() {
       try {
@@ -56,8 +72,150 @@ export default function DashboardAppPage() {
         navigate('/login', { replace: true });
       }
     }
+    async function fetchChartData() {
+      try {
+        const response = await axios.post(
+          'http://localhost:5000/api/verify/chartdetails',
+          { xhrFields: { withCredentials: true } },
+          { withCredentials: true }
+        );
+        const chartDetails = response.data.mealTypeCountsByMonth;
+        console.log(chartDetails[0].mealTypeCounts);
+    
+        const formattedChartData = chartDetails[0].mealTypeCounts.map((item) => ({
+          label: item.mealType,
+          value: item.count,
+        }));
+        console.log(formattedChartData);
+        setChartData(formattedChartData);
+    
+        // Initialize an object to store counts for each meal type
+        const mealTypeCounts = {
+          Breakfast: [],
+          Lunch: [],
+          Grace1_Lunch: [],
+          Grace2_Lunch: [],
+          Snacks: [],
+          Dinner: [],
+          Grace1_Dinner: [],
+        };
+    
+        // Populate counts for each meal type
+        for (let i = 0; i < 6; i+=1) {
+          if(chartDetails[i]){
+          const monthData = chartDetails[i];
+          
+          Object.keys(mealTypeCounts).forEach((mealType) => {
+            const countObj = monthData.mealTypeCounts.find((count) => count.mealType === mealType);
+            mealTypeCounts[mealType].push(countObj ? countObj.count : 0);
+          });
+        }
+        else{
+          Object.keys(mealTypeCounts).forEach((mealType) => {
+            // const countObj = monthData.mealTypeCounts.find((count) => count.mealType === mealType);
+            mealTypeCounts[mealType].push(0);
+          });
+        }
+        }
+    
+        // Set state variables for each meal type
+        setBreakfastCounts(mealTypeCounts.Breakfast);
+        setLunchCounts(mealTypeCounts.Lunch);
+        setGrace1LunchCounts(mealTypeCounts.Grace1_Lunch);
+        setGrace2LunchCounts(mealTypeCounts.Grace2_Lunch);
+        setSnacksCounts(mealTypeCounts.Snacks);
+        setDinnerCounts(mealTypeCounts.Dinner);
+        setgrace1DinnerCounts(mealTypeCounts.Grace1_Dinner);
+        console.log(mealTypeCounts.Lunch);
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
+    async function fetchDayWiseData() {
+      try {
+        const response = await axios.post(
+          'http://localhost:5000/api/verify/mealtimeline',
+          { xhrFields: { withCredentials: true } },
+          { withCredentials: true }
+        );
+        const DayWiseDetails = response.data.mealTypeCountsForToday;
+        console.log(DayWiseDetails);
+        const formattedDayWiseData = DayWiseDetails.map((item) => ({
+          label: item.mealType,
+          value: item.count,
+        }));
+        setDayWiseData(formattedDayWiseData);
+        console.log(formattedDayWiseData);
+        // const formattedChartData = chartDetails[0].mealTypeCounts.map((item) => ({
+        //   label: item.mealType,
+        //   value: item.count,
+        // }));
+        // setChartData(formattedChartData);
+    
+        // // Initialize an object to store counts for each meal type
+        // const mealTypeCounts = {
+        //   Breakfast: [],
+        //   Lunch: [],
+        //   Grace1_Lunch: [],
+        //   Grace2_Lunch: [],
+        //   Snacks: [],
+        //   Dinner: [],
+        //   Grace1_Dinner: [],
+        // };
+    
+        // // Populate counts for each meal type
+        // for (let i = 0; i < 6; i+=1) {
+        //   if(chartDetails[i]){
+        //   const monthData = chartDetails[i];
+          
+        //   Object.keys(mealTypeCounts).forEach((mealType) => {
+        //     const countObj = monthData.mealTypeCounts.find((count) => count.mealType === mealType);
+        //     mealTypeCounts[mealType].push(countObj ? countObj.count : 0);
+        //   });
+        // }
+        // else{
+        //   Object.keys(mealTypeCounts).forEach((mealType) => {
+        //     // const countObj = monthData.mealTypeCounts.find((count) => count.mealType === mealType);
+        //     mealTypeCounts[mealType].push(0);
+        //   });
+        // }
+        // }
+    
+        // // Set state variables for each meal type
+        // setBreakfastCounts(mealTypeCounts.Breakfast);
+        // setLunchCounts(mealTypeCounts.Lunch);
+        // setGrace1LunchCounts(mealTypeCounts.Grace1_Lunch);
+        // setGrace2LunchCounts(mealTypeCounts.Grace2_Lunch);
+        // setSnacksCounts(mealTypeCounts.Snacks);
+        // setDinnerCounts(mealTypeCounts.Dinner);
+        // setgrace1DinnerCounts(mealTypeCounts.Grace1_Dinner);
+        // console.log(mealTypeCounts.Lunch);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    async function getMenu(){
+      try {
+        const { data } = await axios.post(
+          'http://localhost:5000/api/menu/list',
+          {
+            xhrFeilds: {
+              withCredentials: true,
+            },
+          },
+          { withCredentials: true }
+        );
+        setMenu(data);
+        console.log(data)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchChartData();
     fetchData();
+    fetchDayWiseData();
+    getMenu();
   }, [navigate]);
 
   const handleBasicUpdate = async () => {
@@ -151,7 +309,19 @@ export default function DashboardAppPage() {
     handleBasicUpdate();
     // eslint-disable-next-line
   }, []);
-
+  useEffect(() => {
+    menu.forEach((d) => {
+      if (d.name === day) {
+        updtmenu(d.meals);
+      }
+    });
+  }, [menu, day]);
+  const transformedData = todaymenu.map((menu, index) => ({
+    id: menu._id, // Assuming _id is available in your database data
+    title: menu.type, // Set title to the 'type' field in your schema
+    description: menu.items.map((item) => item.name).join(', '), // Join all item names as the description
+    image: `/assets/images/covers/cover_${index + 1}.avif`,
+  }));
   return (
     <>
       <Helmet>
@@ -165,50 +335,70 @@ export default function DashboardAppPage() {
         <Typography variant="h6" sx={{ ml: 1, mb: 5 }}>
           Quickly go through your work!
         </Typography>
-        <div>
-          {' '}
-          <Typography variant="h4" sx={{ mb: 3 }}>
-            Upload your New Transaction CSV File 📄
-          </Typography>
-          <Upload />
-        </div>
+        <Grid item xs={12} md={6} lg={8} sx ={{ marginBottom: 5 }}>
+            <AppWebsiteVisits
+              title="Monthly Consumption"
+              subheader="Last 6 Months"
+              chartData={[
+                {
+                  name: 'Breakfast',
+                  type: 'bar',
+                  stackId: 'monthly',
+                  fill: 'solid',
+                  data: breakfastCounts.reverse(), // Replace with the array of lunch counts for each month
+                },
+                {
+                  name: 'Lunch',
+                  type: 'bar',
+                  stackId: 'monthly',
+                  fill: 'solid',
+                  data: lunchCounts.reverse(), // Replace with the array of lunch counts for each month
+                },
+                {
+                  name: 'Grace1 Lunch',
+                  type: 'bar',
+                  stackId: 'monthly',
+                  fill: 'solid',
+                  data: grace1LunchCounts.reverse(), // Replace with the array of grace1 lunch counts for each month
+                },
+                {
+                  name: 'Grace2 Lunch',
+                  type: 'bar',
+                  stackId: 'monthly',
+                  fill: 'solid',
+                  data: grace2LunchCounts.reverse(), // Replace with the array of grace2 lunch counts for each month
+                },
+                {
+                  name: 'Snacks',
+                  type: 'bar',
+                  stackId: 'monthly',
+                  fill: 'solid',
+                  data: snacksCounts.reverse(), // Replace with the array of lunch counts for each month
+                },
+                {
+                  name: 'Dinner',
+                  type: 'bar',
+                  stackId: 'monthly',
+                  fill: 'solid',
+                  data: dinnerCounts.reverse(), // Replace with the array of dinner counts for each month
+                },
+                {
+                  name: 'Grace1 Dinner',
+                  type: 'bar',
+                  stackId: 'monthly',
+                  fill: 'solid',
+                  data: grace1DinnerCounts.reverse(), // Replace with the array of grace1 dinner counts for each month
+                }
+              ]}
+            />
+          </Grid>
 
-        <Typography variant="h4" sx={{ mb: 3 }}>
-          Have an eye on Messes🧐!
-        </Typography>
-
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6} lg={6}>
+          <Grid container spacing={2}>
+  {/* First AppCurrentVisits */}
+          <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits
-              children={
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', padding: '24px' }}>
-                  <DatePicker
-                    label={'From'}
-                    openTo="day"
-                    value={basicFrom}
-                    onChange={(basicFrom) => setBasicFrom(basicFrom)}
-                    views={['day', 'month', 'year']}
-                    sx={{ maxWidth: '155px' }}
-                  />
-                  <DatePicker
-                    label={'To'}
-                    openTo="day"
-                    value={basicTo}
-                    onChange={(basicTo) => setBasicTo(basicTo)}
-                    views={['day', 'month', 'year']}
-                    sx={{ maxWidth: '155px' }}
-                  />
-                  <Button
-                    onClick={handleBasicUpdate}
-                    variant="contained"
-                    sx={{ margin: 'auto 1rem', maxHeight: '40px' }}
-                  >
-                    Update
-                  </Button>
-                </div>
-              }
-              title="Basic Comparison Chart"
-              chartData={basicChartData}
+              title="Dinning Chart For Current Month"
+              chartData={chartData}
               chartColors={[
                 theme.palette.primary.main,
                 theme.palette.info.main,
@@ -219,38 +409,13 @@ export default function DashboardAppPage() {
               sx={{ height: '100%' }}
             />
           </Grid>
-
-          <Grid item xs={12} md={6} lg={6}>
-            <AppCurrentVisits
-              children={
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', padding: '24px' }}>
-                  <DatePicker
-                    label={'From'}
-                    openTo="day"
-                    value={addOnFrom}
-                    onChange={(addOnFrom) => setAddOnFrom(addOnFrom)}
-                    views={['day', 'month', 'year']}
-                    sx={{ maxWidth: '155px' }}
-                  />
-                  <DatePicker
-                    label={'To'}
-                    openTo="day"
-                    value={addOnTo}
-                    onChange={(addOnTo) => setAddOnTo(addOnTo)}
-                    views={['day', 'month', 'year']}
-                    sx={{ maxWidth: '155px' }}
-                  />
-                  <Button
-                    onClick={handleAddOnUpdate}
-                    variant="contained"
-                    sx={{ margin: 'auto 1rem', maxHeight: '40px' }}
-                  >
-                    Update
-                  </Button>
-                </div>
-              }
-              title="Add-On Comparison Chart"
-              chartData={addOnChartData}
+            
+          {/* Second AppCurrentVisits */}
+          <Grid item xs={12} md={6} lg={4}>
+            <AppCurrentDay
+              // Empty string as the title to avoid duplication
+              title="Dinning Chart For Current Day"
+              dayWiseData={dayWiseData} // Assuming chartData is the same for both
               chartColors={[
                 theme.palette.primary.main,
                 theme.palette.info.main,
@@ -260,8 +425,12 @@ export default function DashboardAppPage() {
               ]}
               sx={{ height: '100%' }}
             />
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <AppNewsUpdate title="Today's Menu" list={transformedData} />
           </Grid>
         </Grid>
+
       </Container>
     </>
   );

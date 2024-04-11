@@ -21,7 +21,7 @@ export default function ProductsPage() {
 
   async function menuList() {
     try {
-      const { data } = await axios.get(
+      const { data } = await axios.post(
         'http://localhost:5000/api/menu/list',
         {
           xhrFeilds: {

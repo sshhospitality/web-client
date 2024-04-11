@@ -109,12 +109,12 @@ export default function DashboardAppPage() {
         // Initialize an object to store counts for each meal type
         const mealTypeCounts = {
           Breakfast: [],
-          lunch: [],
+          Lunch: [],
           Grace1_Lunch: [],
           Grace2_Lunch: [],
-          snacks: [],
-          dinner: [],
-          grace1_dinner: [],
+          Snacks: [],
+          Dinner: [],
+          Grace1_Dinner: [],
         };
     
         // Populate counts for each meal type
@@ -137,14 +137,14 @@ export default function DashboardAppPage() {
     
         // Set state variables for each meal type
         setBreakfastCounts(mealTypeCounts.Breakfast);
-        setLunchCounts(mealTypeCounts.lunch);
+        setLunchCounts(mealTypeCounts.Lunch);
         setGrace1LunchCounts(mealTypeCounts.Grace1_Lunch);
         setGrace2LunchCounts(mealTypeCounts.Grace2_Lunch);
-        setSnacksCounts(mealTypeCounts.snacks);
-        setDinnerCounts(mealTypeCounts.dinner);
-        setgrace1DinnerCounts(mealTypeCounts.grace1_dinner);
+        setSnacksCounts(mealTypeCounts.Snacks);
+        setDinnerCounts(mealTypeCounts.Dinner);
+        setgrace1DinnerCounts(mealTypeCounts.Grace1_Dinner);
     
-        console.log(mealTypeCounts.lunch);
+        console.log(mealTypeCounts.Lunch);
       } catch (error) {
         console.log(error);
       }

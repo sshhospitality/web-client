@@ -27,7 +27,8 @@ ShopProductCard.propTypes = {
 export default function ShopProductCard({ name, category, type}) {
   // const { names, cover, prices, colors, status, priceSale } = product;
   // console.log(category);
-  const col = type === "Veg" ?  ["green"] :["red"] ;
+  const imageSrc = category === "Veg" ? "https://images.unsplash.com/photo-1599020792689-9fde458e7e17?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmVnZXRhcmlhbiUyMGZvb2R8ZW58MHx8MHx8fDA%3D" :
+  "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8NXx8fGVufDB8fHx8fA%3D%3D&w=1000&q=80"
   return (
     <Card  sx={{ minWidth: 275 ,marginBottom:10}}>
       {/* <Typography variant="subtitle2" noWrap>
@@ -49,7 +50,7 @@ export default function ShopProductCard({ name, category, type}) {
             {category}
           </Label>
         {/* )} */}
-        <StyledProductImg alt={name} src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8NXx8fGVufDB8fHx8fA%3D%3D&w=1000&q=80" />
+        <StyledProductImg alt={name} src={imageSrc} />
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>

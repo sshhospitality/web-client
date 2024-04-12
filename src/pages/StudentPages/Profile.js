@@ -1,41 +1,39 @@
+import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
 import React from 'react';
 import Button from '@mui/material/Button';
-import { Helmet } from 'react-helmet-async';
 import Typography from '@mui/material/Typography';
-import {
-  MDBCol,
-  MDBContainer,
-  MDBRow,
-  MDBCard,
-  MDBCardText,
-  MDBCardBody,
-  MDBCardImage,
-} from 'mdb-react-ui-kit';
+import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
   const navigate = useNavigate();
   const handleOut = async (e) => {
     e.preventDefault();
-    const res = await axios.post('http://localhost:5000/api/auth/logout',{xhrFields: {withCredentials:true}},{withCredentials: true});
-    console.log('logged out');
-    localStorage.clear();
-    sessionStorage.clear();
-    navigate('/login', { replace: true });
+    const res = await axios.post(
+      'http://localhost:5000/api/auth/logout',
+      { xhrFields: { withCredentials: true } },
+      { withCredentials: true }
+    );
+    if (res.status(200)) {
+      console.log('logged out');
+
+      localStorage.clear();
+      sessionStorage.clear();
+      navigate('/login', { replace: true });
+    }
   };
   const name = localStorage.getItem('name');
   const email = localStorage.getItem('email');
   const id = localStorage.getItem('id');
-  const mess = localStorage.getItem('mess');
   return (
     <>
       <Helmet>
         <title> Profile Page | IIT Bhilai Dinning System </title>
       </Helmet>
-      <Typography component="h1" variant="h1" mt='0px' mb='30px' align='center' color='#333c3c'>
-            My Profile
-          </Typography>
+      <Typography component="h1" variant="h1" mt="0px" mb="30px" align="center" color="#333c3c">
+        My Profile
+      </Typography>
       <section style={{ backgroundColor: '' }}>
         <MDBContainer className="py-5">
           <MDBRow>
@@ -43,7 +41,7 @@ export default function Profile() {
               <MDBCard className="mb-4">
                 <MDBCardBody
                   className="text-center"
-                  style={{minHeight: '267px',display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                  style={{ minHeight: '267px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
                 >
                   <MDBCardImage
                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI0x0ZiBEwwzWeZs35Rw-xEUcUKT6sy2fFGTC2XbG0_yovNtqJxy8cxEPi6zEKg9QdTFU&usqp=CAU"
@@ -77,15 +75,6 @@ export default function Profile() {
                     </MDBCol>
                     <MDBCol sm="9">
                       <MDBCardText className="text-muted">{email}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <hr />
-                  <MDBRow>
-                    <MDBCol sm="3">
-                      <MDBCardText>Mess</MDBCardText>
-                    </MDBCol>
-                    <MDBCol sm="9">
-                      <MDBCardText className="text-muted">{mess}</MDBCardText>
                     </MDBCol>
                   </MDBRow>
                   <hr />

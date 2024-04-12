@@ -1,62 +1,307 @@
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Typography, Container, Grid } from '@mui/material';
-import { AppWidgetSummary } from '../../sections/@dashboard/app';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+// @mui
+import {
+  Card,
+  Table,
+  Stack,
+  Paper,
+  Button,
+  TableRow,
+  TableBody,
+  TableCell,
+  Container,
+  Typography,
+  TableContainer,
+  TablePagination,
+} from '@mui/material';
+// components
+import Scrollbar from '../../components/scrollbar';
+import SpinnerLoadingScreen from '../../components/SpinnerLoadingScreen';
 
-export default function AdminStudentDetails() {
+// sections
+import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user';
+import { handleCustomAlert } from '../../components/handleCustomAlert';
+// mock
+
+// ----------------------------------------------------------------------
+
+const TABLE_HEAD = [
+  { id: 'name', label: 'Name', alignRight: false },
+  { id: 'id', label: 'Id', alignRight: false },
+];
+
+// ----------------------------------------------------------------------
+
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function applySortFilter(array, comparator, query) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+
+  if (query) {
+    query = query.toLowerCase(); // Convert query to lowercase for case-insensitive search
+    return stabilizedThis
+      .filter(([user]) =>
+        Object.values(user).some((value) => {
+          if (typeof value === 'string') {
+            // If the value is a string, check if it contains the query
+            return value.toLowerCase().includes(query);
+          }
+          if (typeof value === 'number') {
+            // If the value is a number, convert it to a string and check
+            return value.toString().includes(query);
+          }
+          // For other data types, skip the filter
+          return false;
+        })
+      )
+      .map(([user]) => user);
+  }
+
+  return stabilizedThis.map(([el]) => el);
+}
+
+export default function AdminStudentsDetails() {
+  const [stud, setStud] = useState([]);
+  const [loader, setLoader] = useState(true);
+  const [page, setPage] = useState(0);
+
+  const [order, setOrder] = useState('asc');
+
+  const [selected, setSelected] = useState([]);
+
+  const [orderBy, setOrderBy] = useState('name');
+
+  const [filterName, setFilterName] = useState('');
+
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
   const navigate = useNavigate();
+
   useEffect(() => {
-    async function verify() {
-      await axios
-        .post(
-          'http://localhost:5000/api/verify/person',
+    async function fetchStudents() {
+      try {
+        const res = await axios.post(
+          `http://localhost:5000/api/admin/students?page=${page + 1}`,
           {
-            xhrFields: {
+            xhrFeilds: {
               withCredentials: true,
             },
           },
           { withCredentials: true }
-        )
-        .then((res) => {
-          const { person } = res.data;
-          if (person !== 'Admin') navigate('/login', { replace: true });
-        })
-        .catch((err) => {
-          if (err.response.status === 401) {
-            navigate('/login', { replace: true });
-          } else console.log(err);
-          localStorage.clear();
-          sessionStorage.clear();
-        });
+        );
+        setStud(res.data.students);
+        console.log(res.data);
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
     }
-    verify();
-  }, [navigate]);
+    fetchStudents();
+  }, [page]);
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+  const users = stud.map((num, index) => ({
+    id: index,
+    stud: num.name,
+    userId: num.userId,
+  }));
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = users.map((n) => n.name);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0); 
+  };
+
+  const handleFilterByName = (event) => {
+    setPage(0);
+    setFilterName(event.target.value);
+  };
+
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
+
+  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
+
+  const isNotFound = !filteredUsers.length && !!filterName;
+
+  const exportPDF = () => {
+    const unit = 'pt';
+    const size = 'A4'; // Use A1, A2, A3 or A4
+    const orientation = 'portrait'; // portrait or landscape
+
+    // eslint-disable-next-line new-cap
+    const doc = new jsPDF(orientation, unit, size);
+
+    doc.setFontSize(15);
+
+    const title = 'Student List';
+    const headers = [['Name', 'Id']];
+
+    const data = stud.map((student) => [student.name, student.id]);
+
+    const content = {
+      startY: 50,
+      head: headers,
+      body: data,
+    };
+
+    doc.text(title, 40, 40);
+    autoTable(doc, content);
+
+    doc.save('report.pdf');
+  };
+
   return (
     <>
       <Helmet>
-        <title> Student Details | IIT Bhilai Dinning System </title>
+        <title> Student List Page | IIT Bhilai Dinning System </title>
       </Helmet>
 
-      <Container style={{ margin: '20vh auto' }}>
-        <Typography margin={'0.5rem'} marginBottom={'2rem'} variant="h2" gutterBottom>
-          Know the Student Details !
+      <Container>
+        <Typography margin={'1rem'} variant="h2" gutterBottom>
+          Know Your Student Details
         </Typography>
-        <Grid container spacing={3}>
-          <Grid onClick={() => navigate('/admin/kumarStudents')} item xs={12} sm={6} md={4}>
-            <AppWidgetSummary title="" total={'Kumar'} color="info" icon={'ant-design:interaction-twotone'} />
-          </Grid>
+        <Card>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+            <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
-          <Grid onClick={() => navigate('/admin/galavStudents')} item xs={12} sm={6} md={4}>
-            <AppWidgetSummary title="" total={'Galav'} color="warning" icon={'ant-design:interaction-twotone'} />
-          </Grid>
+            <Button
+              variant="outlined"
+              style={{ margin: '15px 2rem', height: '2.5rem', minWidth: '140px' }}
+              onClick={exportPDF}
+            >
+              Download as PDF
+            </Button>
+          </div>
 
-          <Grid onClick={() => navigate('/admin/saiStudents')} item xs={12} sm={6} md={4}>
-            <AppWidgetSummary title="" total={'Shree Sai'} color="error" icon={'ant-design:interaction-twotone'} />
-          </Grid>
-        </Grid>
+          <Scrollbar>
+            <TableContainer sx={{ minWidth: 800 }}>
+              <Table>
+                <UserListHead
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={users.length}
+                  numSelected={selected.length}
+                  onRequestSort={handleRequestSort}
+                  onSelectAllClick={handleSelectAllClick}
+                />
+                <TableBody>
+                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    const { id, stud, userId } = row;
+                    const selectedUser = selected.indexOf(stud) !== -1;
+
+                    return (
+                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
+                        <TableCell padding="checkbox" />
+
+                        <TableCell component="th" scope="row" padding="none">
+                          <Stack direction="row" alignItems="center" spacing={2}>
+                            <Typography variant="subtitle2" noWrap>
+                              {stud}
+                            </Typography>
+                          </Stack>
+                        </TableCell>
+
+                        <TableCell align="left">{userId}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+
+                {isNotFound && (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                        <Paper
+                          sx={{
+                            textAlign: 'center',
+                          }}
+                        >
+                          <Typography variant="h6" paragraph>
+                            Not found
+                          </Typography>
+
+                          <Typography variant="body2">
+                            No results found for &nbsp;
+                            <strong>&quot;{filterName}&quot;</strong>.
+                            <br /> Try checking for typos or using complete words.
+                          </Typography>
+                        </Paper>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                )}
+              </Table>
+              {/* {loader && <SpinnerLoadingScreen />}
+              {!loader && stud.length === 0 && (
+                <div>
+                  {' '}
+                  <Typography
+                    variant="h5"
+                    style={{ padding: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    No Data Found
+                  </Typography>
+                </div>
+              )} */}
+            </TableContainer>
+          </Scrollbar>
+
+          <TablePagination
+            rowsPerPageOptions={[10, 20, 30]}
+            component="div"
+            count={users.length}
+            // count={"10"}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Card>
       </Container>
     </>
   );

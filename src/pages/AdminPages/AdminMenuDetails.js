@@ -16,6 +16,38 @@ import {
 import PropTypes from 'prop-types';
 import { ProductSort, ProductCard } from '../../sections/@dashboard/products';
 
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+CustomTabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
 // ----------------------------------------------------------------------
 function getCurrentDay() {
   const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -31,7 +63,8 @@ export default function AdminMenuDetails() {
   const [menu, setMenu] = useState([]);
   const [todayMenu, setTodayMenu] = useState([]);
   const [open, setOpen] = useState(false);
-  const [items, setItems] = useState([{ dayTime: '', category: '', name: '', price: '', type: '' }]);
+  const [dayId, setDayId] = useState('');
+  const [items, setItems] = useState([{ dayTime: '', category: '', name: ''}]);
 
   useEffect(() => {
     async function fetchMenu() {
@@ -57,6 +90,7 @@ export default function AdminMenuDetails() {
   useEffect(() => {
     menu.forEach((dayMenu) => {
       if (dayMenu.name === day) {
+        setDayId(dayMenu._id);
         setTodayMenu(dayMenu.meals);
       }
     });
@@ -71,10 +105,26 @@ export default function AdminMenuDetails() {
   };
 
   const handleSubmit = async () => {
+    const transformedArray = items.reduce((acc, currentItem) => {
+      const { dayTime, category, name } = currentItem;
+      const existingTypeIndex = acc.findIndex(item => item.type === dayTime);
+    
+      if (existingTypeIndex !== -1) {
+        acc[existingTypeIndex].items.push({ name, category });
+      } else {
+        acc.push({ type: dayTime, items: [{ name, category }] });
+      }
+      return acc;
+    }, []);
+    const transformedString = JSON.stringify(transformedArray)
+    .replace(/\"([^\"]+)\":/g, '"$1":') // Quotes around keys
+    .replace(/\"([^\"]+)\":/g, '"$1":') // Quotes around values
+    console.log(transformedString);
+    console.log(dayId);
     try {
       await axios.post(
-        'http://localhost:5000/api/menu/updateMenu',
-        { messName: 'Kumar', menu: items },
+        'http://localhost:5000/api/admin/update-Menu',
+        { _id: dayId,  meals: JSON.parse(transformedString) },
         { withCredentials: true }
       );
     } catch (error) {
@@ -83,7 +133,7 @@ export default function AdminMenuDetails() {
   };
 
   const handleAddItem = () => {
-    setItems([...items, { dayTime: '', category: '', name: '', price: '', type: '' }]);
+    setItems([...items, { dayTime: '', category: '', name: '' }]);
   };
 
   const handleItemChange = (index, field, event) => {
@@ -97,6 +147,25 @@ export default function AdminMenuDetails() {
     newItems.splice(index, 1);
     setItems(newItems);
   };
+  useEffect(() => {
+    const newItems = [];
+    menu.forEach((d) => {
+      if (d.name === day) {
+        d.meals.forEach((meal) => {
+          meal.items.forEach((item) => {
+            newItems.push({
+              day: d.name,
+              dayTime: meal.type,
+              category: item.category,
+              name: item.name,
+            });
+          });
+        });
+      }
+    });
+
+    setItems(newItems);
+  }, [day, todayMenu, menu]);
 
   return (
     <>
@@ -199,27 +268,6 @@ export default function AdminMenuDetails() {
                       fullWidth
                       value={item.name}
                       onChange={(event) => handleItemChange(index, 'name', event)}
-                    />
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id={`item-${index}-price`}
-                      label="Price"
-                      type="text"
-                      fullWidth
-                      value={item.price}
-                      onChange={(event) => handleItemChange(index, 'price', event)}
-                    />
-                    <TextField
-                      key={index}
-                      autoFocus
-                      margin="dense"
-                      id={`item-${index}-type`}
-                      label="Type"
-                      type="text"
-                      fullWidth
-                      value={item.type}
-                      onChange={(event) => handleItemChange(index, 'type', event)}
                     />
                     <Button onClick={() => handleRemoveItem(index)}>Remove</Button>
                   </div>

@@ -25,6 +25,7 @@ import AdminDashboard from './pages/AdminPages/AdminDashboard';
 import AdminStudentDetails from './pages/AdminPages/AdminStudentDetails';
 import AdminTransactionDetails from './pages/AdminPages/AdminTransactionDetails';
 import AdminMessDetails from './pages/AdminPages/AdminMessDetails';
+import AdminMenuDetails from './pages/AdminPages/AdminMenuDetails';
 import VerificationPortal from './pages/AdminPages/VerificationPortal';
 import VerifyIndiForm from './pages/AdminPages/VerifyIndiForm';
 import VerifyIndividualUser from './pages/AdminPages/VerifyIndividualUser';
@@ -135,6 +136,7 @@ export default function Router() {
         { path: 'galavTransaction', element: <GalavTransaction /> },
         { path: 'saiTransaction', element: <SaiTransaction /> },
         { path: 'messDetails', element: <AdminMessDetails /> },
+        { path: 'menuDetails', element: <AdminMenuDetails /> },
         { path: 'verificationPortal', element: <VerificationPortal /> },
         { path: 'verifyIndiForm', element: <VerifyIndiForm /> },
         { path: 'verifyIndividualUser', element: <VerifyIndividualUser /> },

@@ -22,7 +22,12 @@ const navConfig = [
     icon: icon('ic_user'),
   },
   {
-    title: 'Mess Details',
+    title: 'Mess Committee Details',
+    path: '/admin/messDetails',
+    icon: icon('ic_lock'),
+  },
+  {
+    title: 'Menu Details',
     path: '/admin/messDetails',
     icon: icon('ic_cart'),
   },

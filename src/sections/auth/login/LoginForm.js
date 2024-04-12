@@ -4,66 +4,66 @@ import axios from 'axios';
 // @mui
 import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-// components 
+// components
 import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     // const token = localStorage.getItem('jwtToken');
-    async function checkLogin () {
-      await axios.post("http://localhost:5000/api/verify/person", { xhrFields: { withCredentials: true } }, {
-        withCredentials: true,
-      },)
+    async function checkLogin() {
+      await axios
+        .post(
+          'http://localhost:5000/api/verify/person',
+          { xhrFields: { withCredentials: true } },
+          {
+            withCredentials: true,
+          }
+        )
         .then((res) => {
           const { person } = res.data;
-          if (person === 'Student')
-            navigate('/dashboard/app', { replace: true });
-          else if (person === 'Vendor')
-            navigate('/vendor/dashboard', { replace: true });
-          else if (person === 'Admin')
-            navigate('/admin/dashboard', { replace: true });
+          if (person === 'Student') navigate('/dashboard/app', { replace: true });
+          else if (person === 'Vendor') navigate('/vendor/dashboard', { replace: true });
+          else if (person === 'Admin') navigate('/admin/dashboard', { replace: true });
         })
         .catch((err) => {
-          if(err.response.status === 401) {
+          if (err.response.status === 401) {
             console.log('Unauthorized, Login Again!');
-          }
-          else
-            console.log(err);
+          } else console.log(err);
           localStorage.clear();
-          sessionStorage.clear();          
+          sessionStorage.clear();
         });
     }
-    checkLogin();    
+    checkLogin();
   }, [navigate]);
 
-  const handleSubmit = async (e) => {  
+  const handleSubmit = async (e) => {
     // e.preventDefault();
-    if(email === "" || password === "") {
-      alert("Please fill in all the fields");
+    if (email === '' || password === '') {
+      alert('Please fill in all the fields');
       return;
     }
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", { email, password }, { withCredentials: true });      
-      localStorage.setItem("person", response.data.person);     
+      const response = await axios.post(
+        'http://localhost:5000/api/auth/login',
+        { email, password },
+        { withCredentials: true }
+      );
+      localStorage.setItem('person', response.data.person);
 
-      if (response.data.person === 'Student')
-        navigate('/dashboard/app', { replace: true });
-      else if (response.data.person === 'Vendor')
-        navigate('/vendor/dashboard', { replace: true });
-      else
-        navigate('/admin/dashboard', { replace: true });
-
+      if (response.data.person === 'Student') navigate('/dashboard/app', { replace: true });
+      else if (response.data.person === 'Vendor') navigate('/vendor/dashboard', { replace: true });
+      else navigate('/admin/dashboard', { replace: true });
     } catch (error) {
       // Handle error response here
-      if(error.response.status === 401) {
+      if (error.response.status === 401) {
         console.log('Unauthorized, Login Again!');
       }
       if (error.response && error.response.data && error.response.data.msg) {

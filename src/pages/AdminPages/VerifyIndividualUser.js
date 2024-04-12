@@ -11,6 +11,7 @@ import {
   Table,
   Paper,
   TableRow,
+  TableHead,
   TableBody,
   TableCell,
   Container,
@@ -49,7 +50,7 @@ const TABLE_HEAD = [
 
 export default function VerifyIndividualUser() {
   const cancelTokenSourceRef = useRef();
-  const [txn, setTxn] = useState([]);
+  const [txns, setTxns] = useState([]);
   const [userName, setUserName] = useState('');
   const [loader, setLoader] = useState(true);
   const navigate = useNavigate();
@@ -97,7 +98,7 @@ export default function VerifyIndividualUser() {
           cancelToken: cancelTokenSourceRef.current.token,
           withCredentials: true,
         });
-        setTxn(res.data.data);
+        setTxns(res.data.transactions);
         setUserName(res.data.name);
       } catch (error) {
         if (axios.isCancel(error)) {
@@ -125,26 +126,26 @@ export default function VerifyIndividualUser() {
     setOrderBy(property);
   };
 
-  const users = txn
-    .sort((a, b) => (a.transaction_date < b.transaction_date ? -1 : 1))
-    .map((num) => ({
-      id: num._id,
-      accountFrom: num.account_from,
-      accountTo: num.account_to,
-      amount: num.amount,
-      trnsType: num.transaction_type,
-      trnsMode: num.transaction_mode,
-      trnsDate: formatDate(num.transaction_date),
-      trnsRem: num.remarks,
-    }));
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+  // const users = txns
+  //   .sort((a, b) => (a.transaction_date < b.transaction_date ? -1 : 1))
+  //   .map((num) => ({
+  //     id: num._id,
+  //     accountFrom: num.account_from,
+  //     accountTo: num.account_to,
+  //     amount: num.amount,
+  //     trnsType: num.transaction_type,
+  //     trnsMode: num.transaction_mode,
+  //     trnsDate: formatDate(num.transaction_date),
+  //     trnsRem: num.remarks,
+  //   }));
+  // const handleSelectAllClick = (event) => {
+  //   if (event.target.checked) {
+  //     const newSelecteds = users.map((n) => n.name);
+  //     setSelected(newSelecteds);
+  //     return;
+  //   }
+  //   setSelected([]);
+  // };
 
   // --:DO NOT DELETE THE BELOW  COMMENTED CODE, CAN BE USED ON LATER STAGE:--
   // const handleClick = (event, name) => {
@@ -176,11 +177,11 @@ export default function VerifyIndividualUser() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
+  // const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
-  const filteredUsers = filter(users, order, orderBy, filterName);
-  if (order === 'desc' && orderBy === 'date') filteredUsers.reverse();
-  const isNotFound = !filteredUsers.length && !!filterName;
+  // const filteredUsers = filter(users, order, orderBy, filterName);
+  // if (order === 'desc' && orderBy === 'date') filteredUsers.reverse();
+  // const isNotFound = !filteredUsers.length && !!filterName;
 
   const handleDelete = (transId) => {
     const confirmDelete = async () => {
@@ -205,8 +206,8 @@ export default function VerifyIndividualUser() {
             }
           );
           if (res.status === 200) {
-            const newTxn = txn.filter((item) => item._id !== transId);
-            setTxn(newTxn);
+            const newTxn = txns.filter((item) => item._id !== transId);
+            setTxns(newTxn);
           }
         } catch (error) {
           if (axios.isCancel(error)) {
@@ -245,7 +246,7 @@ export default function VerifyIndividualUser() {
             }
           );
           if (res.status === 200) {
-            setTxn([]);
+            setTxns([]);
           }
         } catch (error) {
           console.log(error);
@@ -308,14 +309,46 @@ export default function VerifyIndividualUser() {
           {userName}
         </Typography>
         <Card>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+          {/* <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
             <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
-          </div>
+          </div> */}
 
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer sx={{ minWidth: 800 }} component={Paper}>
               <Table>
-                <UserListHead
+              <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Ref No.</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell>From</TableCell>
+                  <TableCell>Meal Type</TableCell>
+                  <TableCell>Mode</TableCell>
+                  <TableCell>Meal Items</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {txns.map((txn) => (
+                  <TableRow key={txn._id}>
+                    <TableCell>{txn.transaction_ref_no}</TableCell>
+                    <TableCell>{txn.timestamp}</TableCell>
+                    <TableCell>{txn.account_from}</TableCell>
+                    <TableCell>{txn.mealType}</TableCell>
+                    <TableCell>{txn.transaction_mode}</TableCell>
+                    <TableCell>{txn.meal_items.join(', ')}</TableCell>
+                    <TableCell align="center">
+                          <DeleteIcon
+                            style={{ cursor: 'pointer', color: '#bb0303' }}
+                            onClick={() => {
+                              handleDelete(txn._id);
+                            }}
+                          />
+                        </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+                {/* <UserListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
@@ -323,8 +356,8 @@ export default function VerifyIndividualUser() {
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
-                />
-                <TableBody>
+                /> */}
+                {/* <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     const { id, trnsDate, accountFrom, trnsType, accountTo, trnsMode, amount, trnsRem } = row;
                     const selectedUser = selected.indexOf(trnsDate) !== -1;
@@ -392,9 +425,9 @@ export default function VerifyIndividualUser() {
                       </TableCell>
                     </TableRow>
                   </TableBody>
-                )}
+                )} */}
               </Table>
-              {loader && <SpinnerLoadingScreen />}
+              {/* {loader && <SpinnerLoadingScreen />}
               {!loader && txn.length === 0 && (
                 <div>
                   {' '}
@@ -405,19 +438,19 @@ export default function VerifyIndividualUser() {
                     No Data Found
                   </Typography>
                 </div>
-              )}
+              )} */}
             </TableContainer>
           </Scrollbar>
 
           <TablePagination
-            rowsPerPageOptions={[20, 30]}
-            component="div"
-            count={isNotFound ? 0 : filteredUsers.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+              rowsPerPageOptions={[10, 20, 30]}
+              component="div"
+              count={txns.length} // Assuming total count is received from backend
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
         </Card>
         <div
           style={{
@@ -433,7 +466,7 @@ export default function VerifyIndividualUser() {
           <div style={{ position: 'relative', display: 'flex', gap: '1rem', marginLeft: '1rem' }}>
             <Button
               variant="outlined"
-              disabled={txn.length === 0}
+              disabled={txns.length === 0}
               color={'secondary'}
               startIcon={<SkipPreviousIcon />}
               onClick={handleTrackPrev}
@@ -442,7 +475,7 @@ export default function VerifyIndividualUser() {
             </Button>
             <Button
               variant="outlined"
-              disabled={txn.length === 0}
+              disabled={txns.length === 0}
               color={'secondary'}
               endIcon={<SkipNextIcon />}
               onClick={handleTrackNext}
@@ -451,7 +484,7 @@ export default function VerifyIndividualUser() {
             </Button>
           </div>
 
-          <Button variant="contained" onClick={handleVerifyAll} disabled={txn.length === 0}>
+          <Button variant="contained" onClick={handleVerifyAll} disabled={txns.length === 0}>
             Verify All
           </Button>
         </div>

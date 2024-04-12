@@ -28,7 +28,7 @@ import AdminMessDetails from './pages/AdminPages/AdminMessDetails';
 import VerificationPortal from './pages/AdminPages/VerificationPortal';
 import VerifyIndiForm from './pages/AdminPages/VerifyIndiForm';
 import VerifyIndividualUser from './pages/AdminPages/VerifyIndividualUser';
-import AddOnRechargePortal from './pages/AdminPages/AddOnRechargePortal';
+import StudentRegister from './pages/AdminPages/StudentRegister';
 import MessVerificationPortal from './components/MessVerificationPortal';
 import Upload from './components/Upload';
 import SaiTransaction from './pages/AdminPages/SaiTransaction';
@@ -139,7 +139,7 @@ export default function Router() {
         { path: 'verifyIndiForm', element: <VerifyIndiForm /> },
         { path: 'verifyIndividualUser', element: <VerifyIndividualUser /> },
         { path: 'messVerificationPortal', element: <MessVerificationPortal /> },
-        { path: 'addOnRechargePortal', element: <AddOnRechargePortal /> },
+        { path: 'studentRegister', element: <StudentRegister /> },
         { path: 'upload', element: <Upload /> },
       ],
     },

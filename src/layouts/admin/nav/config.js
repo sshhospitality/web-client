@@ -37,8 +37,8 @@ const navConfig = [
     icon: icon('ic_blog'),
   },
   {
-    title: 'Payments',
-    path: '/admin/addOnRechargePortal',
+    title: 'Student Registration',
+    path: '/admin/studentRegister',
     icon: icon('ic_lock'),
   },
 ];

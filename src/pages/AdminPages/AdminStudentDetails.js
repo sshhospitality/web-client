@@ -33,6 +33,7 @@ import { handleCustomAlert } from '../../components/handleCustomAlert';
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'id', label: 'Id', alignRight: false },
+  { id: 'email', label: 'Email ID', alignRight: false}
 ];
 
 // ----------------------------------------------------------------------
@@ -127,10 +128,12 @@ export default function AdminStudentsDetails() {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
+
   const users = stud.map((num, index) => ({
     id: index,
     stud: num.name,
     userId: num.userId,
+    email: num.email
   }));
 
   const handleSelectAllClick = (event) => {
@@ -173,9 +176,9 @@ export default function AdminStudentsDetails() {
     doc.setFontSize(15);
 
     const title = 'Student List';
-    const headers = [['Name', 'Id']];
+    const headers = [['Name', 'Id No.', 'Email Id']];
 
-    const data = stud.map((student) => [student.name, student.id]);
+    const data = stud.map((student) => [student.name, student.userId, student.email]);
 
     const content = {
       startY: 50,
@@ -202,7 +205,6 @@ export default function AdminStudentsDetails() {
         <Card>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
             <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
-
             <Button
               variant="outlined"
               style={{ margin: '15px 2rem', height: '2.5rem', minWidth: '140px' }}
@@ -226,7 +228,7 @@ export default function AdminStudentsDetails() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, stud, userId } = row;
+                    const { id, stud, userId, email } = row;
                     const selectedUser = selected.indexOf(stud) !== -1;
 
                     return (
@@ -242,6 +244,7 @@ export default function AdminStudentsDetails() {
                         </TableCell>
 
                         <TableCell align="left">{userId}</TableCell>
+                        <TableCell align="left">{email}</TableCell>
                       </TableRow>
                     );
                   })}

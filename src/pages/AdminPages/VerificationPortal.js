@@ -45,19 +45,6 @@ export default function VerificationPortal() {
             <AppWidgetSummary title="" total={'Individual User'} color="info" icon={'ant-design:interaction-twotone'} />
           </Grid>
         </Grid>
-        <Grid container spacing={3}>
-          <Grid onClick={() => navigate('/admin/messVerificationPortal?mess=kumar')} item xs={12} sm={6} md={4}>
-            <AppWidgetSummary title="" total={'Kumar'} color="info" icon={'ant-design:interaction-twotone'} />
-          </Grid>
-
-          <Grid onClick={() => navigate('/admin/messVerificationPortal?mess=galav')} item xs={12} sm={6} md={4}>
-            <AppWidgetSummary title="" total={'Galav'} color="warning" icon={'ant-design:interaction-twotone'} />
-          </Grid>
-
-          <Grid onClick={() => navigate('/admin/messVerificationPortal?mess=sai')} item xs={12} sm={6} md={4}>
-            <AppWidgetSummary title="" total={'Shree Sai'} color="error" icon={'ant-design:interaction-twotone'} />
-          </Grid>
-        </Grid>
       </Container>
     </>
   );

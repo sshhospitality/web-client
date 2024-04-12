@@ -43,7 +43,7 @@ export default function TransactionHistory() {
   const [order, setOrder] = useState('asc');
 
   const [selected, setSelected] = useState([]);
-
+  
   const [orderBy, setOrderBy] = useState('name');
 
   const [filterName, setFilterName] = useState('');
@@ -51,12 +51,12 @@ export default function TransactionHistory() {
   useEffect(() => {
     async function fetchTransactions() {
       try {
+        console.log(txnFrom);
         const res = await axios.post(
           `http://localhost:5000/api/txn/history?page=${page + 1}`,
           {
-            xhrFeilds: {
-              withCredentials: true,
-            },
+            from: txnFrom,
+            to: txnTo,
           },
           { withCredentials: true }
         );
@@ -77,14 +77,53 @@ export default function TransactionHistory() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  const handleFilterByName = (event) => {
-    setFilterName(event.target.value); // Update filter value
-    filteredTransactions();
-  };
-  const filteredTransactions = transactions.filter((transaction) =>
-    transaction.account_from.toLowerCase().includes(filterName.toLowerCase())
-  );
+  // const handleFilterByName = (event) => {
+  //   setFilterName(event.target.value); // Update filter value
+  //   filteredTransactions();
+  // };
+  // const filteredTransactions = transactions.filter((transaction) =>
+  //   transaction.account_from.toLowerCase().includes(filterName.toLowerCase())
+  // );
+
+
+
   const handleDownload = async () => {
+    // Cancel the previous request, if there is one
+    // if (cancelTokenSourceRef.current) {
+    //   cancelTokenSourceRef.current.cancel('New request made');
+    // }
+
+    // // Create a new cancel token
+    // cancelTokenSourceRef.current = axios.CancelToken.source();
+
+    // const diffInDate = txnTo.diff(txnFrom, 'month');
+    // if (diffInDate > 6) {
+    //   handleCustomAlert('Date Range', 'Please select range of 6months or less', 'danger');
+    // } else if (diffInDate <= 6) {
+    //   setIsLoading(true);
+      // try {
+      //   const res = await axios.post(
+      //     `http://localhost:5000/api/txn/history?page=${page + 1}`,
+      //     {
+      //       from: txnFrom,
+      //       to: txnTo,
+      //     },
+      //     { withCredentials: true, cancelToken: cancelTokenSourceRef.current.token }
+      //   );
+        // if (res.data.transactions.length > 0) {
+          exportPDF(transactions);
+      // } catch (error) {
+      //   if (axios.isCancel(error)) {
+      //     console.log('Request canceled');
+      //   } else if (error.response.status === 401) {
+      //     navigate('/login', { replace: true });
+      //   } else console.log(error);
+      // } finally {
+      //   setIsLoading(false);
+      // }
+    };
+
+    const handleUpdate = async () => {
     // Cancel the previous request, if there is one
     if (cancelTokenSourceRef.current) {
       cancelTokenSourceRef.current.cancel('New request made');
@@ -97,22 +136,17 @@ export default function TransactionHistory() {
     if (diffInDate > 6) {
       handleCustomAlert('Date Range', 'Please select range of 6months or less', 'danger');
     } else if (diffInDate <= 6) {
-      setIsLoading(true);
+      setLoader(true);
       try {
         const res = await axios.post(
-          'http://localhost:5000/api/txn/transactions',
+          `http://localhost:5000/api/txn/history?page=${page + 1}`,
           {
-            mess: 'mess-galav',
             from: txnFrom,
             to: txnTo,
           },
           { withCredentials: true, cancelToken: cancelTokenSourceRef.current.token }
         );
-        if (res.data.data.length > 0) {
-          exportPDF(res.data.data);
-        } else {
-          handleCustomAlert('No Data', 'No data found', 'danger');
-        }
+        setTransactions(res.data.transactions);
       } catch (error) {
         if (axios.isCancel(error)) {
           console.log('Request canceled');
@@ -120,7 +154,7 @@ export default function TransactionHistory() {
           navigate('/login', { replace: true });
         } else console.log(error);
       } finally {
-        setIsLoading(false);
+        setLoader(false);
       }
     }
   };
@@ -142,18 +176,18 @@ export default function TransactionHistory() {
             {/* <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} /> */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', alignItems: 'center', margin: '0 2rem', gap: '1rem', flexWrap: 'wrap' }}>
-                {/* <TextField
+                <TextField
                   label="Filter by Name"
                   value={filterName}
-                  onChange={handleFilterByName} // Attach handleFilterByName to input's onChange event
+                  // onChange={handleFilterByName} // Attach handleFilterByName to input's onChange event
                   variant="outlined"
                   size="small"
-                /> */}
+                />
               </div>
               {/* Button and other components */}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', margin: '0 2rem', gap: '1rem', flexWrap: 'wrap' }}>
-              {/* <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
                 <DatePicker
                   label={'From'}
                   openTo="day"
@@ -173,15 +207,15 @@ export default function TransactionHistory() {
                 <Button onClick={handleUpdate} variant="contained" sx={{ margin: 'auto 0px', maxHeight: '40px' }}>
                   Update
                 </Button>
-              </div> */}
+              </div>
             </div>
-            {/* <Button
+            <Button
               variant="outlined"
               style={{ margin: '15px 2rem', height: '2.5rem', minWidth: '140px' }}
               onClick={handleDownload}
             >
               Request for Download
-            </Button> */}
+            </Button>
           </div>
           <TableContainer component={Paper}>
             <Table>

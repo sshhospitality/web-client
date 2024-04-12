@@ -14,16 +14,14 @@ export const exportPDF = (txn) => {
     doc.setFontSize(15);
 
     const title = 'Transaction Data';
-    const headers = [['Date', 'To', 'From', 'Amount', 'Type', 'Mode', 'Remarks']];
+    const headers = [['Date', 'From', 'Type', 'Mode', 'Ref. No.']];
 
     const data = txn.map((transaction) => [
-      formatDate(transaction.transaction_date),
-      transaction.account_to,
+      formatDate(transaction.timestamp),
       transaction.account_from,
-      transaction.amount,
-      transaction.transaction_type,
+      transaction.mealType,
       transaction.transaction_mode,
-      transaction.remarks,
+      transaction.transaction_ref_no
     ]);
 
     const content = {

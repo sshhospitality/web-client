@@ -81,9 +81,8 @@ export default function AdminTransactionDetails() {
         const res = await axios.post(
           `http://localhost:5000/api/admin/transactions?page=${page + 1}`,
           {
-            xhrFeilds: {
-              withCredentials: true,
-            },
+            from: txnFrom,
+            to: txnTo,
           },
           { withCredentials: true }
         );
@@ -148,43 +147,7 @@ export default function AdminTransactionDetails() {
   // if (order === 'desc' && orderBy === 'date') filteredUsers.reverse();
   // const isNotFound = !filteredUsers.length && !!filterName;
 
-  // const handleUpdate = async () => {
-  //   // Cancel the previous request, if there is one
-  //   if (cancelTokenSourceRef.current) {
-  //     cancelTokenSourceRef.current.cancel('New request made');
-  //   }
-
-  //   // Create a new cancel token
-  //   cancelTokenSourceRef.current = axios.CancelToken.source();
-
-  //   const diffInDate = txnTo.diff(txnFrom, 'month');
-  //   if (diffInDate > 6) {
-  //     handleCustomAlert('Date Range', 'Please select range of 6months or less', 'danger');
-  //   } else if (diffInDate <= 6) {
-  //     setLoader(true);
-  //     try {
-  //       const res = await axios.post(
-  //         'http://localhost:5000/api/txn/transactions',
-  //         {
-  //           mess: 'mess-galav',
-  //           from: txnFrom,
-  //           to: txnTo,
-  //         },
-  //         { withCredentials: true, cancelToken: cancelTokenSourceRef.current.token }
-  //       );
-  //       setTxns(res.data.data);
-  //     } catch (error) {
-  //       if (axios.isCancel(error)) {
-  //         console.log('Request canceled');
-  //       } else if (error.response.status === 401) {
-  //         navigate('/login', { replace: true });
-  //       } else console.log(error);
-  //     } finally {
-  //       setLoader(false);
-  //     }
-  //   }
-  // };
-  const handleDownload = async () => {
+  const handleUpdate = async () => {
     // Cancel the previous request, if there is one
     if (cancelTokenSourceRef.current) {
       cancelTokenSourceRef.current.cancel('New request made');
@@ -197,22 +160,18 @@ export default function AdminTransactionDetails() {
     if (diffInDate > 6) {
       handleCustomAlert('Date Range', 'Please select range of 6months or less', 'danger');
     } else if (diffInDate <= 6) {
-      setIsLoading(true);
+      setLoader(true);
       try {
         const res = await axios.post(
-          'http://localhost:5000/api/txn/transactions',
+          `http://localhost:5000/api/admin/transactions?page=${page + 1}`,
           {
-            mess: 'mess-galav',
+            // mess: 'mess-galav',
             from: txnFrom,
             to: txnTo,
           },
           { withCredentials: true, cancelToken: cancelTokenSourceRef.current.token }
         );
-        if (res.data.data.length > 0) {
-          exportPDF(res.data.data);
-        } else {
-          handleCustomAlert('No Data', 'No data found', 'danger');
-        }
+        setTxns(res.data.transactions);
       } catch (error) {
         if (axios.isCancel(error)) {
           console.log('Request canceled');
@@ -220,9 +179,49 @@ export default function AdminTransactionDetails() {
           navigate('/login', { replace: true });
         } else console.log(error);
       } finally {
-        setIsLoading(false);
+        setLoader(false);
       }
     }
+  };
+  const handleDownload = async () => {
+    // // Cancel the previous request, if there is one
+    // if (cancelTokenSourceRef.current) {
+    //   cancelTokenSourceRef.current.cancel('New request made');
+    // }
+
+    // // Create a new cancel token
+    // cancelTokenSourceRef.current = axios.CancelToken.source();
+
+    // const diffInDate = txnTo.diff(txnFrom, 'month');
+    // if (diffInDate > 6) {
+    //   handleCustomAlert('Date Range', 'Please select range of 6months or less', 'danger');
+    // } else if (diffInDate <= 6) {
+    //   setIsLoading(true);
+    //   try {
+    //     const res = await axios.post(
+    //       'http://localhost:5000/api/txn/transactions',
+    //       {
+    //         mess: 'mess-galav',
+    //         from: txnFrom,
+    //         to: txnTo,
+    //       },
+    //       { withCredentials: true, cancelToken: cancelTokenSourceRef.current.token }
+    //     );
+    //     if (res.data.data.length > 0) {
+          exportPDF(txns);
+    //     } else {
+    //       handleCustomAlert('No Data', 'No data found', 'danger');
+    //     }
+    //   } catch (error) {
+    //     if (axios.isCancel(error)) {
+    //       console.log('Request canceled');
+    //     } else if (error.response.status === 401) {
+    //       navigate('/login', { replace: true });
+    //     } else console.log(error);
+    //   } finally {
+    //     setIsLoading(false);
+    //   }
+    // }
   };
 
   const handleTrackPrev = async () => {
@@ -294,7 +293,7 @@ export default function AdminTransactionDetails() {
               {/* Button and other components */}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', margin: '0 2rem', gap: '1rem', flexWrap: 'wrap' }}>
-              {/* <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
                 <DatePicker
                   label={'From'}
                   openTo="day"
@@ -314,15 +313,15 @@ export default function AdminTransactionDetails() {
                 <Button onClick={handleUpdate} variant="contained" sx={{ margin: 'auto 0px', maxHeight: '40px' }}>
                   Update
                 </Button>
-              </div> */}
+              </div>
             </div>
-            {/* <Button
+            <Button
               variant="outlined"
               style={{ margin: '15px 2rem', height: '2.5rem', minWidth: '140px' }}
               onClick={handleDownload}
             >
               Request for Download
-            </Button> */}
+            </Button>
           </div>
           <TableContainer component={Paper}>
             <Table>

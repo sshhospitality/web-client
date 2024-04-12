@@ -59,40 +59,17 @@ export default function ContactUs() {
   const id = localStorage.getItem('id');
   const email = localStorage.getItem('email');
   const name = localStorage.getItem('name');
-  const [messDetails, setMessDetails] = useState({
-    g1Name: '',
-    g1Number: '',
-    g2Name: '',
-    g2Number: '',
-    k1Name: '',
-    k1Number: '',
-    k2Name: '',
-    k2Number: '',
-    s1Name: '',
-    s1Number: '',
-    s2Name: '',
-    s2Number: '',
-  });
+  const [messDetails, setMessDetails] = useState();
 
   useEffect(() => {
     async function updateMDetails() {
       try {
-        const { data } = await axios.get(`http://localhost:5000/api/admin/mess/details/`, { withCredentials: true });
-        setMessDetails({
-          ...messDetails,
-          k1Name: data[0].details[0].Name,
-          k1Number: data[0].details[0].Number,
-          k2Name: data[0].details[1].Name,
-          k2Number: data[0].details[1].Number,
-          g1Name: data[1].details[0].Name,
-          g1Number: data[1].details[0].Number,
-          g2Name: data[1].details[1].Name,
-          g2Number: data[1].details[1].Number,
-          s1Name: data[2].details[0].Name,
-          s1Number: data[2].details[0].Number,
-          s2Name: data[2].details[1].Name,
-          s2Number: data[2].details[1].Number,
-        });
+        const response = await axios.get(`http://localhost:5000/api/admin/getadmindetails/`, { withCredentials: true });
+        const data = response.data;
+        console.log(data);
+        const vendorRepresentatives = data.filter((item) => item.Position === 'vendor_representative');
+        const studentRepresentatives = data.filter((item) => item.Position === 'student_representative');
+        setMessDetails({ vendorRepresentatives, studentRepresentatives });
       } catch (error) {
         if (error.response.status === 401) {
           localStorage.clear();
@@ -102,7 +79,7 @@ export default function ContactUs() {
       }
     }
     updateMDetails();
-  }, [messDetails, navigate]);
+  }, [navigate]);
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
@@ -164,52 +141,36 @@ export default function ContactUs() {
 
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                  <Tab label="Kumar" {...a11yProps(0)} />
-                  <Tab label="Galav" {...a11yProps(1)} />
-                  <Tab label="Shree Sai" {...a11yProps(2)} />
+                  <Tab label="Vendor Representative" {...a11yProps(0)} />
+                  <Tab label="Student Representative" {...a11yProps(1)} />
                 </Tabs>
               </Box>
+
               <CustomTabPanel value={value} index={0}>
-                <Typography variant="h5" align="left" mt={4} mb={1}>
-                  {messDetails.k1Name}
-                </Typography>
-                <Typography subtitle1="h6" align="left" mb={2}>
-                  {messDetails.k1Number}
-                </Typography>
-                <Typography variant="h5" align="left" mb={1}>
-                  {messDetails.k2Name}
-                </Typography>
-                <Typography subtitle1="h6" align="left" mb={2}>
-                  {messDetails.k1Number}
-                </Typography>
+                {messDetails &&
+                  messDetails.vendorRepresentatives.map((person) => (
+                    <div key={person._id}>
+                      <Typography variant="h5" align="left" mt={4} mb={1}>
+                        {person.Name}
+                      </Typography>
+                      <Typography subtitle1="h6" align="left" mb={2}>
+                        {person.Number}
+                      </Typography>
+                    </div>
+                  ))}
               </CustomTabPanel>
               <CustomTabPanel value={value} index={1}>
-                <Typography variant="h5" align="left" mt={4} mb={1}>
-                  {messDetails.g1Name}
-                </Typography>
-                <Typography subtitle1="h6" align="left" mb={2}>
-                  {messDetails.g1Number}
-                </Typography>
-                <Typography variant="h5" align="left" mb={1}>
-                  {messDetails.g2Name}
-                </Typography>
-                <Typography subtitle1="h6" align="left" mb={2}>
-                  {messDetails.g2Number}
-                </Typography>
-              </CustomTabPanel>
-              <CustomTabPanel value={value} index={2}>
-                <Typography variant="h5" align="left" mt={4} mb={1}>
-                  {messDetails.s1Name}
-                </Typography>
-                <Typography subtitle1="h6" align="left" mb={2}>
-                  {messDetails.s1Number}
-                </Typography>
-                <Typography variant="h5" align="left" mb={1}>
-                  {messDetails.s2Name}
-                </Typography>
-                <Typography subtitle1="h6" align="left" mb={2}>
-                  {messDetails.s2Number}
-                </Typography>
+                {messDetails &&
+                  messDetails.studentRepresentatives.map((person) => (
+                    <div key={person._id}>
+                      <Typography variant="h5" align="left" mt={4} mb={1}>
+                        {person.Name}
+                      </Typography>
+                      <Typography subtitle1="h6" align="left" mb={2}>
+                        {person.Number}
+                      </Typography>
+                    </div>
+                  ))}
               </CustomTabPanel>
             </Box>
           </Box>

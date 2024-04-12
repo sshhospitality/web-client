@@ -132,7 +132,7 @@ export default function TransactionHistory() {
       </Helmet>
       <Container>
         <Typography margin={'1rem'} marginLeft={'0.5rem'} variant="h2" gutterBottom>
-          Kumar Mess
+          Students Transactions
         </Typography>
         <Typography margin={'1rem'} variant="h5" gutterBottom>
           [Latest Transactions]
@@ -142,13 +142,13 @@ export default function TransactionHistory() {
             {/* <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} /> */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', alignItems: 'center', margin: '0 2rem', gap: '1rem', flexWrap: 'wrap' }}>
-                <TextField
+                {/* <TextField
                   label="Filter by Name"
                   value={filterName}
                   onChange={handleFilterByName} // Attach handleFilterByName to input's onChange event
                   variant="outlined"
                   size="small"
-                />
+                /> */}
               </div>
               {/* Button and other components */}
             </div>
@@ -175,13 +175,13 @@ export default function TransactionHistory() {
                 </Button>
               </div> */}
             </div>
-            <Button
+            {/* <Button
               variant="outlined"
               style={{ margin: '15px 2rem', height: '2.5rem', minWidth: '140px' }}
               onClick={handleDownload}
             >
               Request for Download
-            </Button>
+            </Button> */}
           </div>
           <TableContainer component={Paper}>
             <Table>

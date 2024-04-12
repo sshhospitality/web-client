@@ -28,7 +28,7 @@ const navConfig = [
   },
   {
     title: 'Menu Details',
-    path: '/admin/messDetails',
+    path: '/admin/menuDetails',
     icon: icon('ic_cart'),
   },
   {

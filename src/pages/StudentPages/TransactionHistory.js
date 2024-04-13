@@ -53,7 +53,7 @@ export default function TransactionHistory() {
       try {
         console.log(txnFrom);
         const res = await axios.post(
-          `http://localhost:5000/api/txn/history?page=${page + 1}`,
+          `${process.env.REACT_APP_API}/api/txn/history?page=${page + 1}`,
           {
             from: txnFrom,
             to: txnTo,
@@ -139,7 +139,7 @@ export default function TransactionHistory() {
       setLoader(true);
       try {
         const res = await axios.post(
-          `http://localhost:5000/api/txn/history?page=${page + 1}`,
+          `${process.env.REACT_APP_API}/api/txn/history?page=${page + 1}`,
           {
             from: txnFrom,
             to: txnTo,

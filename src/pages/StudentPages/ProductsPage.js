@@ -22,7 +22,7 @@ export default function ProductsPage() {
   async function menuList() {
     try {
       const { data } = await axios.post(
-        'http://localhost:5000/api/menu/list',
+        `${process.env.REACT_APP_API}/api/menu/list`,
         {
           xhrFeilds: {
             withCredentials: true,

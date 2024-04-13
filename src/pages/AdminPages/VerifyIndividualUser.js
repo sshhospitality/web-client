@@ -94,7 +94,7 @@ export default function VerifyIndividualUser() {
       cancelTokenSourceRef.current = axios.CancelToken.source();
 
       try {
-        const res = await axios.get(`http://localhost:5000/api/admin/transactions?id=${id}&page=${newPage}`, {
+        const res = await axios.get(`${process.env.REACT_APP_API}/api/admin/transactions?id=${id}&page=${newPage}`, {
           cancelToken: cancelTokenSourceRef.current.token,
           withCredentials: true,
         });

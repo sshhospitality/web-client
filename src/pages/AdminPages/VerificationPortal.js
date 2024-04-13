@@ -12,7 +12,7 @@ export default function VerificationPortal() {
     async function verify() {
       await axios
         .post(
-          'http://localhost:5000/api/verify/person',
+          `${process.env.REACT_APP_API}/api/verify/person`,
           { xhrFields: { withCredentials: true } },
           { withCredentials: true }
         )

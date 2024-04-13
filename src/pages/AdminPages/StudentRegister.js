@@ -57,8 +57,8 @@ export default function StudentRegister() {
       // if (window.confirm('Confirm the registration?')) {
         setIsLoading(true);
         try {
-          const responce = await axios.post(
-            'http://localhost:5000/api/auth/signup',
+          const response = await axios.post(
+            `${process.env.REACT_APP_API}/api/auth/signup`,
             { email, password, userId, name, person: "Student" },
             { withCredentials: true }
           );
@@ -99,7 +99,7 @@ export default function StudentRegister() {
       setIsLoading(true);
       try {
         const responce = await axios.post(
-          'http://localhost:5000/api/auth/signup',
+          `${process.env.REACT_APP_API}/api/auth/signup`,
           { email, password, userId, name, person: "Student" },
           { withCredentials: true }
         );

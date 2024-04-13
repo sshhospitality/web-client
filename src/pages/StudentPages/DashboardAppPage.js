@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
-// sections
 import trnxList from '../../utils/trnxHistory';
 import {
   AppNewsUpdate,
@@ -48,7 +47,7 @@ export default function DashboardAppPage() {
     async function fetchData() {
       try {
         const response = await axios.post(
-          'http://localhost:5000/api/verify/details',
+          `${process.env.REACT_APP_API}/api/verify/details`,
           { xhrFields: { withCredentials: true } },
           { withCredentials: true }
         );
@@ -82,7 +81,7 @@ export default function DashboardAppPage() {
     async function fetchChartData() {
       try {
         const response = await axios.post(
-          'http://localhost:5000/api/verify/chartdetails',
+          `${process.env.REACT_APP_API}/api/verify/chartdetails`,
           { xhrFields: { withCredentials: true } },
           { withCredentials: true }
         );
@@ -142,7 +141,7 @@ export default function DashboardAppPage() {
     async function getMenu(){
       try {
         const { data } = await axios.post(
-          'http://localhost:5000/api/menu/list',
+          `${process.env.REACT_APP_API}/api/menu/list`,
           {
             xhrFeilds: {
               withCredentials: true,
@@ -158,7 +157,7 @@ export default function DashboardAppPage() {
     }
     async function getDayWiseMeal(){
       const response = await axios.post(
-        'http://localhost:5000/api/verify/mealtimeline',
+        `${process.env.REACT_APP_API}/api/verify/mealtimeline`,
         { xhrFields: { withCredentials: true } },
         { withCredentials: true }
       );

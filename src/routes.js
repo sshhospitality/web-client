@@ -52,7 +52,7 @@ export default function Router() {
     // }
     async function validation() {
       try {
-        const response = await axios.post('http://localhost:5000/api/verify/person', {
+        const response = await axios.post(`${process.env.REACT_APP_API}/api/verify/person`, {
           withCredentials: true,
         });
         const { person } = response.data;

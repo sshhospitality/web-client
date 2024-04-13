@@ -12,6 +12,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import { ProductSort, ProductCard } from '../../sections/@dashboard/products';
@@ -64,26 +66,26 @@ export default function AdminMenuDetails() {
   const [todayMenu, setTodayMenu] = useState([]);
   const [open, setOpen] = useState(false);
   const [dayId, setDayId] = useState('');
-  const [items, setItems] = useState([{ dayTime: '', category: '', name: ''}]);
+  const [items, setItems] = useState([{ dayTime: '', category: '', name: '' }]);
 
-  useEffect(() => {
-    async function fetchMenu() {
-      try {
-        const response = await axios.post(
-          `http://localhost:5000/api/menu/list`,
-          { xhrFields: { withCredentials: true } },
-          { withCredentials: true }
-        );
-        const { data } = response;
-        setMenu(data);
-        setTodayMenu([]);
-      } catch (error) {
-        if (error.response.status === 401) {
-          navigate('/login', { replace: true });
-        }
-        console.error('Error fetching menu:', error);
+  async function fetchMenu() {
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/menu/list`,
+        { xhrFields: { withCredentials: true } },
+        { withCredentials: true }
+      );
+      const { data } = response;
+      setMenu(data);
+      setTodayMenu([]);
+    } catch (error) {
+      if (error.response.status === 401) {
+        navigate('/login', { replace: true });
       }
+      console.error('Error fetching menu:', error);
     }
+  }
+  useEffect(() => {
     fetchMenu();
   }, [navigate]);
 
@@ -107,8 +109,8 @@ export default function AdminMenuDetails() {
   const handleSubmit = async () => {
     const transformedArray = items.reduce((acc, currentItem) => {
       const { dayTime, category, name } = currentItem;
-      const existingTypeIndex = acc.findIndex(item => item.type === dayTime);
-    
+      const existingTypeIndex = acc.findIndex((item) => item.type === dayTime);
+
       if (existingTypeIndex !== -1) {
         acc[existingTypeIndex].items.push({ name, category });
       } else {
@@ -117,16 +119,17 @@ export default function AdminMenuDetails() {
       return acc;
     }, []);
     const transformedString = JSON.stringify(transformedArray)
-    .replace(/\"([^\"]+)\":/g, '"$1":') // Quotes around keys
-    .replace(/\"([^\"]+)\":/g, '"$1":') // Quotes around values
+      .replace(/\"([^\"]+)\":/g, '"$1":') // Quotes around keys
+      .replace(/\"([^\"]+)\":/g, '"$1":'); // Quotes around values
     console.log(transformedString);
     console.log(dayId);
     try {
       await axios.post(
         'http://localhost:5000/api/admin/update-Menu',
-        { _id: dayId,  meals: JSON.parse(transformedString) },
+        { _id: dayId, meals: JSON.parse(transformedString) },
         { withCredentials: true }
       );
+      fetchMenu();
     } catch (error) {
       console.error('Error updating menu:', error);
     }
@@ -239,26 +242,37 @@ export default function AdminMenuDetails() {
               <DialogContent>
                 {items.map((item, index) => (
                   <div key={index} style={{ display: 'flex', gap: '1rem' }}>
-                    <TextField
+                    <Select
                       autoFocus
                       margin="dense"
                       id={`item-${index}-dayTime`}
                       label="Day Time"
-                      type="text"
                       fullWidth
                       value={item.dayTime}
                       onChange={(event) => handleItemChange(index, 'dayTime', event)}
-                    />
-                    <TextField
+                    >
+                      <MenuItem value="Breakfast">Breakfast</MenuItem>
+                      <MenuItem value="Lunch">Lunch</MenuItem>
+                      <MenuItem value="Grace1_Lunch">Grace1_Lunch</MenuItem>
+                      <MenuItem value="Grace2_Lunch">Grace2_Lunch</MenuItem>
+                      <MenuItem value="Snacks">Snacks</MenuItem>
+                      <MenuItem value="Dinner">Dinner</MenuItem>
+                      <MenuItem value="Grace1_Dinner">Grace1_Dinner</MenuItem>
+                    </Select>
+
+                    <Select
                       autoFocus
                       margin="dense"
                       id={`item-${index}-category`}
                       label="Category"
-                      type="text"
                       fullWidth
                       value={item.category}
                       onChange={(event) => handleItemChange(index, 'category', event)}
-                    />
+                    >
+                      <MenuItem value="Veg">Veg</MenuItem>
+                      <MenuItem value="Non Veg">Non Veg</MenuItem>
+                    </Select>
+
                     <TextField
                       autoFocus
                       margin="dense"

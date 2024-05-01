@@ -1,25 +1,24 @@
-import { Helmet } from 'react-helmet-async';
+// Import necessary modules and components
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import emailjs from 'emailjs-com';
 import axios from 'axios';
 
 // @mui
-import { Button, Container, Typography, TextField, Box } from '@mui/material';
+import { Button, Container, Typography, TextField, Box, Rating } from '@mui/material';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Form } from 'semantic-ui-react';
-// components
 import Swal from 'sweetalert2';
 
-// ----------------------------------------------------------------------
-
+// Service details for sending emails
 const SERVICE_ID = 'service_3k0ua7g';
 const TEMPLATE_ID = 'template_5sw2wi9';
 const USER_ID = 'D6DKJjcrvzaH6b4fU';
 
-// ----------------------------------------------------------------------
+// Custom Tab Panel component
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
   return (
@@ -45,22 +44,29 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
+// Function to set accessibility props for tabs
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
   };
 }
-// ----------------------------------------------------------------------
 
+// Main component for Contact Us page
 export default function ContactUs() {
   const navigate = useNavigate();
 
+  // Retrieve user details from local storage
   const id = localStorage.getItem('id');
   const email = localStorage.getItem('email');
   const name = localStorage.getItem('name');
-  const [messDetails, setMessDetails] = useState();
 
+  // State variables for storing mess details, selected rating, and uploaded image
+  const [messDetails, setMessDetails] = useState();
+  const [rating, setRating] = useState(0);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  // Fetch mess details from the server on component mount
   useEffect(() => {
     async function updateMDetails() {
       try {
@@ -81,16 +87,28 @@ export default function ContactUs() {
     updateMDetails();
   }, [navigate]);
 
+  // Function to handle form submission
   const handleOnSubmit = (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append('rating', rating);
+    formData.append('file', selectedFile);
+    formData.append('user_email', e.target.user_email.value);
+    formData.append('from_name', e.target.from_name.value);
+    formData.append('from_id', e.target.from_id.value);
+    formData.append('message', e.target.message.value);
+    
+    // Send email using emailjs
     emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, e.target, USER_ID).then(
       () => {
+        // Display success message if email sent successfully
         Swal.fire({
           icon: 'success',
           title: 'Message Sent Successfully',
         });
       },
       (error) => {
+        // Display error message if email sending fails
         console.log(error.text);
         Swal.fire({
           icon: 'error',
@@ -99,11 +117,24 @@ export default function ContactUs() {
         });
       }
     );
+    // Reset form fields
     e.target.reset();
   };
 
+  // Function to handle rating change
+  const handleRatingChange = (event, newValue) => {
+    setRating(newValue);
+  };
+
+  // Function to handle file selection
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  // State variable for controlling active tab
   const [value, setValue] = React.useState(0);
 
+  // Function to handle tab change
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -128,7 +159,6 @@ export default function ContactUs() {
                 flexDirection: 'column',
                 maxWidth: 600,
                 mx: 'auto',
-
                 p: 4,
                 borderRadius: '12px',
                 boxShadow: 6,
@@ -192,7 +222,6 @@ export default function ContactUs() {
                 alignItems: 'center',
                 maxWidth: 600,
                 mx: 'auto',
-
                 p: 4,
                 borderRadius: '12px',
                 boxShadow: 6,
@@ -252,6 +281,37 @@ export default function ContactUs() {
                   placeholder="Message…"
                   required
                 />
+
+                {/* Rating */}
+                <Typography variant="subtitle1" mb={1} mt={2}>
+                  Rate Your Experience
+                </Typography>
+                <Rating
+                  name="rating"
+                  value={rating}
+                  onChange={handleRatingChange}
+                  size="large"
+                  precision={1}
+                />
+
+                {/* Image Upload */}
+                <Typography variant="subtitle1" mb={1} mt={2}>
+                  Upload Image
+                </Typography>
+                <input
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  id="raised-button-file"
+                  type="file"
+                  onChange={handleFileChange}
+                />
+                <label htmlFor="raised-button-file">
+                  <Button variant="outlined" component="span">
+                    Choose File
+                  </Button>
+                </label>
+                {selectedFile && <Typography>{selectedFile.name}</Typography>}
+
                 <Button
                   fullWidth
                   type="submit"

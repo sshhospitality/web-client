@@ -162,7 +162,7 @@ export default function TransactionHistory() {
   return (
     <>
       <Helmet>
-        <title> Live Service Page | IIT Bhilai Dinning System </title>
+        <title> Live Service Page | Naivedyam Dinning System </title>
       </Helmet>
       <Container>
         <Typography margin={'1rem'} marginLeft={'0.5rem'} variant="h2" gutterBottom>

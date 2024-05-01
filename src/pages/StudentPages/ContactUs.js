@@ -111,7 +111,7 @@ export default function ContactUs() {
   return (
     <>
       <Helmet>
-        <title> Contact Page | IIT Bhilai Dinning System </title>
+        <title> Contact Page | Naivedyam Dinning System </title>
       </Helmet>
       <div style={{ display: 'flex' }}>
         <Container>

@@ -42,7 +42,7 @@ export default function Payment() {
   return (
     <>
       <Helmet>
-        <title> Payment Page | IIT Bhilai Dinning System </title>
+        <title> Payment Page | Naivedyam Dinning System </title>
       </Helmet>
       <CssBaseline />
       <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>

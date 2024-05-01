@@ -302,7 +302,7 @@ export default function VerifyIndividualUser() {
   return (
     <>
       <Helmet>
-        <title> Student Details | IIT Bhilai Dinning System </title>
+        <title> Student Details | Naivedyam Dinning System </title>
       </Helmet>
       <Container>
         <Typography margin={'1rem'} marginLeft={'0.5rem'} variant="h3" gutterBottom>

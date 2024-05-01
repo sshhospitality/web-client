@@ -195,7 +195,7 @@ export default function SaiStudents() {
   return (
     <>
       <Helmet>
-        <title> Student List Page | IIT Bhilai Dinning System </title>
+        <title> Student List Page | Naivedyam Dinning System </title>
       </Helmet>
 
       <Container>

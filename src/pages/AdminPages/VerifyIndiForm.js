@@ -19,7 +19,7 @@ export default function VerifyIndiForm() {
   return (
     <>
       <Helmet>
-        <title> Verification Portal| IIT Bhilai Dinning System </title>
+        <title> Verification Portal| Naivedyam Dinning System </title>
       </Helmet>
 
       <Container style={{ margin: '20vh auto' }}>

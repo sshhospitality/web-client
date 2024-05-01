@@ -173,7 +173,7 @@ export default function AdminMenuDetails() {
   return (
     <>
       <Helmet>
-        <title> Mess Details | IIT Bhilai Dining System </title>
+        <title> Mess Details | Naivedyam Dining System </title>
       </Helmet>
 
       <Container>

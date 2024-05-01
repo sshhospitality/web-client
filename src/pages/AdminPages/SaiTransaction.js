@@ -296,7 +296,8 @@ export default function SaiTransaction() {
   return (
     <>
       <Helmet>
-        <title> Student Details | IIT Bhilai Dinning System </title>
+        <title> Student Details | Naivdeyam Dinning System </title>
+        
       </Helmet>
 
       <Container>

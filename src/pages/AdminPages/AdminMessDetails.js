@@ -102,7 +102,7 @@ export default function AdminMessDetails() {
   return (
     <>
       <Helmet>
-        <title>Mess Committee Details | IIT Bhilai Dining System</title>
+        <title>Mess Committee Details | Naivedyam Dining System</title>
       </Helmet>
 
       <Container>

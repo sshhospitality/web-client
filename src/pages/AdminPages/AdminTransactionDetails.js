@@ -267,7 +267,7 @@ export default function AdminTransactionDetails() {
   return (
     <>
       <Helmet>
-        <title> Student Details | IIT Bhilai Dinning System </title>
+        <title> Student Details | Naivedyam Dinning System </title>
       </Helmet>
 
       <Container>

@@ -258,7 +258,7 @@ export default function DashboardAppPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | IIT Bhilai Dining Page </title>
+        <title> Dashboard | Naivedyam Dining Page </title>
       </Helmet>
 
       <Container maxWidth="xl">

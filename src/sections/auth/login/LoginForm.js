@@ -53,7 +53,7 @@ export default function LoginForm() {
     try {
       console.log(`${process.env.REACT_APP_API}`)
       const response = await axios.post(
-        `https://naivedyam-server-aiims.onrender.com/api/auth/login`,
+        `http://localhost:5000/api/auth/login`,
         { email, password },
         { withCredentials: true }
       );

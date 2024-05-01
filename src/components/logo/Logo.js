@@ -13,7 +13,7 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }) => {
   const logo = (
     <Box
       component="img"
-      src="/assets/IIT_Bhilai_Mess_Logo.png"
+      src="/assets/LOGO.png"
       sx={{ width: 240, cursor: 'pointer', borderRadius: '6px', ...sx }}
       {...other}
     />

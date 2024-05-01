@@ -44,7 +44,7 @@ export default function DashboardAppPage() {
     async function fetchData() {
       try {
         const response = await axios.post(
-          'http://localhost:5000/api/verify/details',
+          `${process.env.REACT_APP_API}/api/verify/details`,
           { xhrfields: { withCredentials: true } },
           {
             withCredentials: true,
@@ -75,7 +75,7 @@ export default function DashboardAppPage() {
     async function fetchChartData() {
       try {
         const response = await axios.post(
-          'http://localhost:5000/api/verify/chartdetails',
+          `${process.env.REACT_APP_API}/api/verify/chartdetails`,
           { xhrFields: { withCredentials: true } },
           { withCredentials: true }
         );
@@ -135,7 +135,7 @@ export default function DashboardAppPage() {
     async function fetchDayWiseData() {
       try {
         const response = await axios.post(
-          'http://localhost:5000/api/verify/mealtimeline',
+          `${process.env.REACT_APP_API}/api/verify/mealtimeline`,
           { xhrFields: { withCredentials: true } },
           { withCredentials: true }
         );
@@ -198,7 +198,7 @@ export default function DashboardAppPage() {
     async function getMenu(){
       try {
         const { data } = await axios.post(
-          'http://localhost:5000/api/menu/list',
+          `${process.env.REACT_APP_API}/api/menu/list`,
           {
             xhrFeilds: {
               withCredentials: true,
@@ -230,7 +230,7 @@ export default function DashboardAppPage() {
     } else if (diffInDates <= 31) {
       try {
         const response = await axios.post(
-          `http://localhost:5000/api/admin/basic/trnx`,
+          `${process.env.REACT_APP_API}/api/admin/basic/trnx`,
           {
             from: basicFrom,
             to: basicTo,

@@ -70,7 +70,7 @@ export default function ContactUs() {
   useEffect(() => {
     async function updateMDetails() {
       try {
-        const response = await axios.get(`http://localhost:5000/api/admin/getadmindetails/`, { withCredentials: true });
+        const response = await axios.get(`${process.env.REACT_APP_API}/api/admin/getadmindetails/`, { withCredentials: true });
         const data = response.data;
         console.log(data);
         const vendorRepresentatives = data.filter((item) => item.Position === 'vendor_representative');

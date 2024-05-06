@@ -55,9 +55,15 @@ export default function DashboardAppPage() {
         setTransactionsToday(response.data.transactionsToday);
         console.log(response.data.transactionsToday);
         console.log(user);
-        localStorage.setItem('email', user.email);
         localStorage.setItem('name', user.name);
         localStorage.setItem('id', user.userId);
+        localStorage.setItem('userId', user._id);
+        localStorage.setItem('collegeId', user.collegeId);
+        localStorage.setItem('department', user.department);
+        localStorage.setItem('isEnrolled', user.isEnrolled);
+        localStorage.setItem('year', user.year);
+        localStorage.setItem('phone', user.phone);
+        localStorage.setItem('collegeName',user.college);
         setName(user.name);
         setId(user.userId);
         setTotal(user.total_amount);
@@ -255,6 +261,7 @@ export default function DashboardAppPage() {
   //   // Call the updateTimeline function
   //   updateTimeline();
   // }, [txn]);
+  const college = localStorage.getItem('collegeName');
   return (
     <>
       <Helmet>
@@ -268,7 +275,7 @@ export default function DashboardAppPage() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="College" total="AIIMS Raipur" icon={'ant-design:home-filled'} />
+            <AppWidgetSummary title="College" total={college} icon={'ant-design:home-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>

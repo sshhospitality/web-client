@@ -60,7 +60,8 @@ export default function ContactUs() {
   const id = localStorage.getItem('id');
   const email = localStorage.getItem('email');
   const name = localStorage.getItem('name');
-
+  const collegeId = localStorage.getItem('collegeId');
+  const userId = localStorage.getItem('userId');
   // State variables for storing mess details, selected rating, and uploaded image
   const [messDetails, setMessDetails] = useState();
   const [rating, setRating] = useState(0);
@@ -70,7 +71,9 @@ export default function ContactUs() {
   useEffect(() => {
     async function updateMDetails() {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API}/api/admin/getadmindetails/`, { withCredentials: true });
+        const response = await axios.get(`${process.env.REACT_APP_API}/api/admin/getadmindetails/`, {
+          withCredentials: true,
+        });
         const data = response.data;
         console.log(data);
         const vendorRepresentatives = data.filter((item) => item.Position === 'vendor_representative');
@@ -88,16 +91,35 @@ export default function ContactUs() {
   }, [navigate]);
 
   // Function to handle form submission
-  const handleOnSubmit = (e) => {
+  const handleOnSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append('rating', rating);
-    formData.append('file', selectedFile);
-    formData.append('user_email', e.target.user_email.value);
-    formData.append('from_name', e.target.from_name.value);
-    formData.append('from_id', e.target.from_id.value);
-    formData.append('message', e.target.message.value);
+    const requestData = {
+      rating,
+      user_email: e.target.user_email.value,
+      from_name: e.target.from_name.value,
+      from_id: e.target.from_id.value,
+      message: e.target.message.value,
+      userId,
+      collegeId,
+      image: null, // Placeholder for the image data
+    };
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.readAsDataURL(selectedFile);
+      reader.onload = () => {
+        requestData.image = reader.result;
+        // Once the file is encoded, make the POST request
+        makePostRequest(requestData);
+      };
+      reader.onerror = (error) => {
+        console.error('Error encoding file:', error);
+      };
+    } else {
+      // If no file is selected, make the POST request without the image
+      makePostRequest(requestData);
+    }
     
+
     // Send email using emailjs
     emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, e.target, USER_ID).then(
       () => {
@@ -120,7 +142,21 @@ export default function ContactUs() {
     // Reset form fields
     e.target.reset();
   };
-
+  const makePostRequest = async (requestData) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/feedback/feedback_post', requestData, {
+        headers: {
+          'Content-Type': 'application/json', // Set the content type to JSON
+        },
+        withCredentials: true,
+      });
+      console.log('Response:', response.data);
+      // Optionally handle success response here
+    } catch (error) {
+      console.error('Error:', error);
+      // Optionally handle error here
+    }
+  };
   // Function to handle rating change
   const handleRatingChange = (event, newValue) => {
     setRating(newValue);
@@ -175,7 +211,6 @@ export default function ContactUs() {
                   <Tab label="Student Representative" {...a11yProps(1)} />
                 </Tabs>
               </Box>
-
               <CustomTabPanel value={value} index={0}>
                 {messDetails &&
                   messDetails.vendorRepresentatives.map((person) => (
@@ -286,13 +321,7 @@ export default function ContactUs() {
                 <Typography variant="subtitle1" mb={1} mt={2}>
                   Rate Your Experience
                 </Typography>
-                <Rating
-                  name="rating"
-                  value={rating}
-                  onChange={handleRatingChange}
-                  size="large"
-                  precision={1}
-                />
+                <Rating name="rating" value={rating} onChange={handleRatingChange} size="large" precision={1} />
 
                 {/* Image Upload */}
                 <Typography variant="subtitle1" mb={1} mt={2}>

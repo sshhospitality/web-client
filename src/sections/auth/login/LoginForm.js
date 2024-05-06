@@ -30,7 +30,7 @@ export default function LoginForm() {
         .then((res) => {
           const { person } = res.data;
           if (person === 'Student') navigate('/dashboard/app', { replace: true });
-          else if (person === 'Vendor') navigate('/vendor/dashboard', { replace: true });
+          else if (person === 'College') navigate('/vendor/dashboard', { replace: true });
           else if (person === 'Admin') navigate('/admin/dashboard', { replace: true });
         })
         .catch((err) => {
@@ -58,9 +58,10 @@ export default function LoginForm() {
         { withCredentials: true }
       );
       localStorage.setItem('person', response.data.person);
+      localStorage.setItem('email', response.data.email);
 
       if (response.data.person === 'Student') navigate('/dashboard/app', { replace: true });
-      else if (response.data.person === 'Vendor') navigate('/vendor/dashboard', { replace: true });
+      else if (response.data.person === 'College') navigate('/vendor/dashboard', { replace: true });
       else navigate('/admin/dashboard', { replace: true });
     } catch (error) {
       // Handle error response here

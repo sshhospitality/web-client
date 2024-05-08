@@ -30,7 +30,7 @@ export default function ProductsPage() {
         },
         { withCredentials: true }
       );
-      setMenu(data);
+      setMenu(data[0]["days"]);
       console.log(data)
     } catch (error) {
       console.log(error);

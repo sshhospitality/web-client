@@ -9,7 +9,7 @@ import DepartmentDashboardLayout from './layouts/department';
 import ContactUs from './pages/StudentPages/ContactUs';
 import Profile from './pages/StudentPages/Profile';
 // import Payment from './pages/StudentPages/Payment';
-import TransactionHistory from './pages/StudentPages/TransactionHistory';
+import TransactionHistory from './pages/StudentPages/DTransactionHistory';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/StudentPages/ProductsPage';
@@ -152,8 +152,6 @@ export default function Router() {
         { path: 'dashboard', element: <DDashboard /> },
         { path: 'profile', element: <DProfile /> },
         { path: 'history', element: <DTransactionHistory /> },
-        { path: 'products', element: <ProductsPage /> },
-        { path: 'contactUs', element: <ContactUs /> },
       ],
     },
     {

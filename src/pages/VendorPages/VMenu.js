@@ -75,8 +75,8 @@ export default function VMenu() {
         { withCredentials: true }
       );
       const { data } = response;
-      console.log(data[0]["days"]);
-      setMenu(data[0]["days"]);
+      console.log(data[0]['days']);
+      setMenu(data[0]['days']);
       setTodayMenu([]);
     } catch (error) {
       if (error.response.status === 401) {
@@ -97,7 +97,7 @@ export default function VMenu() {
         key = true;
       }
     });
-    if(!key) setTodayMenu([]);
+    if (!key) setTodayMenu([]);
   }, [day, menu]);
 
   const handleOpen = () => {
@@ -109,6 +109,7 @@ export default function VMenu() {
   };
 
   const handleSubmit = async () => {
+    console.log(items);
     const transformedArray = items.reduce((acc, currentItem) => {
       const { dayTime, category, name } = currentItem;
       const existingTypeIndex = acc.findIndex((item) => item.type === dayTime);
@@ -124,12 +125,13 @@ export default function VMenu() {
       .replace(/\"([^\"]+)\":/g, '"$1":') // Quotes around keys
       .replace(/\"([^\"]+)\":/g, '"$1":'); // Quotes around values
     console.log(transformedString);
+    console.log(day)
     try {
       await axios.post(
         'http://localhost:5000/api/college/update-Menu',
         { dayName: day, meals: JSON.parse(transformedString) },
         { withCredentials: true }
-      );  
+      );
       fetchMenu();
     } catch (error) {
       console.error('Error updating menu:', error);
@@ -209,30 +211,36 @@ export default function VMenu() {
               {day}
             </Typography>
 
-            {todayMenu.map((item, itemIndex) => (
-              <div key={itemIndex}>
-                <Typography
-                  variant="h4"
-                  my={'20px'}
-                  style={{ backgroundColor: '#d0f2ff', padding: '0px 10px', color: '#04297a' }}
-                >
-                  {item.type}
-                </Typography>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '30px' }}>
-                  {item.items.map((i, index) => (
-                    <ProductCard
-                      key={index}
-                      name={i.name}
-                      price={i.price}
-                      category={i.category}
-                      type={i.type}
-                      time={item.type}
-                    />
-                  ))}
+            {todayMenu.length === 0 ? (
+              <Typography variant="h5" color="textSecondary">
+                No menu for today
+              </Typography>
+            ) : (
+              todayMenu.map((item, itemIndex) => (
+                <div key={itemIndex}>
+                  <Typography
+                    variant="h4"
+                    my={'20px'}
+                    style={{ backgroundColor: '#d0f2ff', padding: '0px 10px', color: '#04297a' }}
+                  >
+                    {item.type}
+                  </Typography>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '30px' }}>
+                    {item.items.map((i, index) => (
+                      <ProductCard
+                        key={index}
+                        name={i.name}
+                        price={i.price}
+                        category={i.category}
+                        type={i.type}
+                        time={item.type}
+                      />
+                    ))}
+                  </div>
+                  <hr />
                 </div>
-                <hr />
-              </div>
-            ))}
+              ))
+            )}
 
             <Button variant="contained" onClick={handleOpen} style={{ marginTop: '1rem' }}>
               Edit Menu

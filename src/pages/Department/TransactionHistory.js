@@ -25,7 +25,7 @@ import { exportPDF } from '../../utils/functions/pdf_download';
 // components
 import { handleCustomAlert } from '../../components/handleCustomAlert';
 
-export default function TransactionHistory() {
+export default function DTransactionHistory() {
   const [transactions, setTransactions] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);

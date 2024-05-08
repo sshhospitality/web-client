@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import DashboardLayout from './layouts/dashboard';
 import VendorDashboardLayout from './layouts/vendor';
 import AdminDashboardLayout from './layouts/admin';
+import DepartmentDashboardLayout from './layouts/department';
 import ContactUs from './pages/StudentPages/ContactUs';
 import Profile from './pages/StudentPages/Profile';
 // import Payment from './pages/StudentPages/Payment';
@@ -19,10 +20,18 @@ import VLiveService from './pages/VendorPages/VLiveService';
 import VHistory from './pages/VendorPages/VHistory';
 import VMenu from './pages/VendorPages/VMenu';
 import VDepartmentRegister from './pages/VendorPages/VDepartmentRegister';
+import VDepartmentList from './pages/VendorPages/VDepartmentList';
 import VFeedback from './pages/VendorPages/VFeedback';
 import VendorMessDetails from './pages/VendorPages/VMessDetails';
 import VStudentList from './pages/VendorPages/VStudentList';
 import VProfile from './pages/VendorPages/VProfile';
+
+
+import DDashboard from './pages/Department/DDashboard';
+import DProfile from './pages/Department/DProfile';
+import DTransactionHistory from './pages/Department/TransactionHistory';
+
+
 import StudentRegister from './pages/VendorPages/StudentRegister';
 import AdminDashboard from './pages/AdminPages/AdminDashboard';
 import AdminStudentDetails from './pages/AdminPages/AdminStudentDetails';
@@ -124,6 +133,7 @@ export default function Router() {
         { path: '', element: <Navigate to="/vendor/dashboard" /> },
         { path: 'dashboard', element: <VDashboard /> },
         { path: 'departmentRegister', element: <VDepartmentRegister /> },
+        { path: 'departmentList', element: <VDepartmentList /> },
         { path: 'feedback', element: <VFeedback /> },
         { path: 'liveService', element: <VLiveService /> },
         { path: 'messdetails', element: <VendorMessDetails /> },
@@ -135,16 +145,15 @@ export default function Router() {
       ],
     },
     {
-      path: '/department',
-      element: <DashboardLayout />,
+      path: '/department/',
+      element: <DepartmentDashboardLayout />,
       children: [
-        { path: '', element: <Navigate to="/dashboard/app" /> },
-        { path: 'app', element: <DashboardAppPage /> },
-        { path: 'history', element: <TransactionHistory /> },
+        { path: '', element: <Navigate to="/department/dashboard" /> },
+        { path: 'dashboard', element: <DDashboard /> },
+        { path: 'profile', element: <DProfile /> },
+        { path: 'history', element: <DTransactionHistory /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'contactUs', element: <ContactUs /> },
-        // { path: 'payment', element: <Payment /> },
-        { path: 'profile', element: <Profile /> },
       ],
     },
     {

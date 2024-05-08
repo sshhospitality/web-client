@@ -28,7 +28,7 @@ const navConfig = [
   },
   {
     title: 'Department List',
-    path: '/vendor/studentList',
+    path: '/vendor/departmentList',
     icon: icon('ic_blog'),
   },
   {

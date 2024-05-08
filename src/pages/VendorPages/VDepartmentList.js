@@ -99,12 +99,12 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map(([el]) => el);
 }
 
-export default function CollegeList() {
+export default function VDepartmentList() {
   const [college, setCollege] = useState([]);
 
   async function collegeDet() {
     try {
-      const res = await axios.get('http://localhost:5000/api/admin/college_get',{ withCredentials: true });
+      const res = await axios.get('http://localhost:5000/api/department/department_get',{ withCredentials: true });
       setCollege(res.data);
     } catch (error) {
       console.log('Error fetching colleges');
@@ -151,7 +151,7 @@ export default function CollegeList() {
   const colleges = college.map((num, index) => ({
     id: num._id,
     name: num.name,
-    cid: num.cid,
+    did: num.did,
     address: num.address,
     phone: num.phone,
   }));
@@ -175,7 +175,7 @@ export default function CollegeList() {
     try {
       // Call your PUT request to update the user details
       console.log(editedDetails);
-      await axios.post(`http://localhost:5000/api/college/college_update/${selected.id}`, editedDetails, {
+      await axios.post(`http://localhost:5000/api/department/department_update/${selected.id}`, editedDetails, {
         withCredentials: true,
       });
       // Close the dialog after successful update
@@ -221,7 +221,7 @@ export default function CollegeList() {
     try {
       // Call your DELETE request to delete the user
       console.log(selected.id);
-      axios.delete(`http://localhost:5000/api/college/college_del/${selected.id}`, { withCredentials: true });
+      axios.delete(`http://localhost:5000/api/department/department_del/${selected.id}`, { withCredentials: true });
       // Close the dialog after successful deletion
       handleCloseMenu();
       collegeDet();
@@ -249,7 +249,7 @@ export default function CollegeList() {
       student.name,
       student.address,
       student.phone,
-      student.cid,
+      student.did,
     ]);
 
     const content = {
@@ -266,12 +266,12 @@ export default function CollegeList() {
   return (
     <>
       <Helmet>
-        <title> College List Page | Naivedyam Dinning System </title>
+        <title> Department List Page | Naivedyam Dinning System </title>
       </Helmet>
 
       <Container>
         <Typography margin={'1rem'} marginLeft={'0.5rem'} variant="h2" gutterBottom>
-          All The Colleges
+          All The Departments
         </Typography>
 
         <Card>
@@ -300,7 +300,7 @@ export default function CollegeList() {
                 />
                 <TableBody>
                   {filteredColleges.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, cid,phone, address } = row;
+                    const { id, name, did,phone, address } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox">
@@ -317,7 +317,7 @@ export default function CollegeList() {
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left">{cid}</TableCell>
+                        <TableCell align="left">{did}</TableCell>
                         <TableCell align="left">{address}</TableCell>
                         <TableCell align="left">{phone}</TableCell>
                         <TableCell align="left">
@@ -420,12 +420,12 @@ export default function CollegeList() {
           <TextField
             autoFocus
             margin="dense"
-            id="cid"
-            label="College ID"
+            id="did"
+            label="Department ID"
             type="text"
-            name="cid"
+            name="did"
             fullWidth
-            value={editedDetails.cid || selected?.cid || ''}
+            value={editedDetails.did || selected?.did || ''}
             onChange={handleInputChange}
           />
           <TextField

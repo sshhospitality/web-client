@@ -58,12 +58,13 @@ export default function LoginForm() {
         { email, password },
         { withCredentials: true }
       );
+      console.log(response.data);
       localStorage.setItem('person', response.data.person);
       localStorage.setItem('email', response.data.email);
 
       if (response.data.person === 'Student') navigate('/dashboard/app', { replace: true });
       else if (response.data.person === 'College') navigate('/vendor/dashboard', { replace: true });
-      else if (response.data.person === 'Deprtment') navigate('/department/dashboard', { replace: true });
+      else if (response.data.person === 'Department') navigate('/department/dashboard', { replace: true });
       else navigate('/admin/dashboard', { replace: true });
     } catch (error) {
       // Handle error response here

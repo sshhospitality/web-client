@@ -45,6 +45,8 @@ export default function DashboardLayout() {
           navigate('/dashboard/app', {replace: true});
         else if(res.data.person === 'Admin')
           navigate('/admin/dashboard', {replace: true});
+         else if(res.data.person === 'Department')
+          navigate('/admin/dashboard', {replace: true});
         else if (res.data.person !== 'College') {
           sessionStorage.clear();
           localStorage.clear();

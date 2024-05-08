@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 
-export default function Profile() {
+export default function DProfile() {
   const navigate = useNavigate();
   const handleOut = async (e) => {
     e.preventDefault();
@@ -18,17 +18,16 @@ export default function Profile() {
     if (res.status(200)) {
       console.log('logged out');
 
+
       localStorage.clear();
       sessionStorage.clear();
       navigate('/login', { replace: true });
     }
   };
+
   const name = localStorage.getItem('name');
   const email = localStorage.getItem('email');
-  const id = localStorage.getItem('id');
-  const department = localStorage.getItem('department');
-  const year = localStorage.getItem('year');
-  const isEnrolled = localStorage.getItem('isEnrolled');
+  const id = localStorage.getItem('departmentId');
   const phone = localStorage.getItem('phone');
   const college = localStorage.getItem('collegeName');
   return (
@@ -76,46 +75,10 @@ export default function Profile() {
                   <hr />
                   <MDBRow>
                     <MDBCol sm="3">
-                      <MDBCardText>College</MDBCardText>
-                    </MDBCol>
-                    <MDBCol sm="9">
-                      <MDBCardText className="text-muted">{college}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <hr />
-                  <MDBRow>
-                    <MDBCol sm="3">
-                      <MDBCardText>Department</MDBCardText>
-                    </MDBCol>
-                    <MDBCol sm="9">
-                      <MDBCardText className="text-muted">{department}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <hr />
-                  <MDBRow>
-                    <MDBCol sm="3">
-                      <MDBCardText>Year</MDBCardText>
-                    </MDBCol>
-                    <MDBCol sm="9">
-                      <MDBCardText className="text-muted">{year}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <hr />
-                  <MDBRow>
-                    <MDBCol sm="3">
                       <MDBCardText>Phone</MDBCardText>
                     </MDBCol>
                     <MDBCol sm="9">
                       <MDBCardText className="text-muted">{phone}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <hr />
-                  <MDBRow>
-                    <MDBCol sm="3">
-                      <MDBCardText>Enrolled</MDBCardText>
-                    </MDBCol>
-                    <MDBCol sm="9">
-                      <MDBCardText className="text-muted">{isEnrolled?"Yes":"No"}</MDBCardText>
                     </MDBCol>
                   </MDBRow>
                   <hr />

@@ -33,33 +33,9 @@ const Main = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function DashboardLayout() {
-  const navigate = useNavigate();
+export default function DepartmentwDashboardLayout() {
   const [open, setOpen] = useState(false);
-  useEffect(() => {
-    async function validation() {
-      try {
-        const res = await axios.post('http://localhost:5000/api/verify/person', { xhrFields: { withCredentials: true } }, { withCredentials: true });        
-        if(res.data.person === 'Vendor')
-          navigate('/vendor/dashboard', {replace: true});
-        else if(res.data.person === 'Admin')
-          navigate('/admin/dashboard', {replace: true});
-        else if (res.data.person !== 'Student') {
-          sessionStorage.clear();
-          localStorage.clear();
-          navigate('/login', { replace: true });
-        }
 
-      }
-      catch (error) {
-        console.log(error);
-        sessionStorage.clear();
-        localStorage.clear();
-        navigate('/login', { replace: true });
-      }
-    }
-    validation();
-  }, [navigate]);
   return (
     <StyledRoot>
       <Header onOpenNav={() => setOpen(true)} />

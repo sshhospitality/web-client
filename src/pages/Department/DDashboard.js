@@ -90,9 +90,20 @@ export default function DDashboard() {
     setFoodItems(updatedItems);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Handle form submission
-    console.log('Submitted food items:', foodItems);
+    try{
+      await axios.post(
+        `${process.env.REACT_APP_API}/api/department/department_txn`,
+        { date_and_time: value, meal_items: foodItems },
+        { withCredentials: true }
+      );
+      console.log('Submitted food items:', foodItems);
+      handleDialogClose();
+    }
+    catch(error){
+      console.error('Error submitting food items:', error);
+    }
   };
 
   return (

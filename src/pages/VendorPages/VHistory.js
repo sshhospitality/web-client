@@ -24,6 +24,10 @@ import { LoadingContext } from '../../components/LoadingContext';
 import { exportPDF } from '../../utils/functions/pdf_download';
 // components
 import { handleCustomAlert } from '../../components/handleCustomAlert';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export default function VHistory() {
   const [transactions, setTransactions] = useState([]);
@@ -50,7 +54,7 @@ export default function VHistory() {
       try {
         console.log(txnFrom);
         const res = await axios.post(
-          `${process.env.REACT_APP_API}/api/txn/history?page=${page + 1}`,
+          `${process.env.REACT_APP_API}/api/department/list_of_dept_txns?page=${page + 1}`,
           {
             from: txnFrom,
             to: txnTo,
@@ -136,7 +140,7 @@ export default function VHistory() {
       setLoader(true);
       try {
         const res = await axios.post(
-          `${process.env.REACT_APP_API}/api/txn/history?page=${page + 1}`,
+          `${process.env.REACT_APP_API}/api/department/list_of_dept_txns?page=${page + 1}`,
           {
             from: txnFrom,
             to: txnTo,
@@ -216,15 +220,14 @@ export default function VHistory() {
             </Button>
           </div>
           <TableContainer component={Paper}>
-            <Table>
+          <Table>
               <TableHead>
                 <TableRow>
                   <TableCell>Ref No.</TableCell>
-                  <TableCell>Date</TableCell>
+                  <TableCell>Timestamp</TableCell>
                   <TableCell>From</TableCell>
-                  <TableCell>Student ID</TableCell>
-                  <TableCell>Meal Type</TableCell>
-                  <TableCell>Mode</TableCell>
+                  <TableCell>To</TableCell>
+                  <TableCell>Date&Time</TableCell>
                   <TableCell>Meal Items</TableCell>
                 </TableRow>
               </TableHead>
@@ -233,11 +236,14 @@ export default function VHistory() {
                   <TableRow key={transaction._id}>
                     <TableCell>{transaction.transaction_ref_no}</TableCell>
                     <TableCell>{transaction.timestamp}</TableCell>
-                    <TableCell>{transaction.studentDetails.name}</TableCell>
-                    <TableCell>{transaction.studentDetails.userId}</TableCell>
-                    <TableCell>{transaction.mealType}</TableCell>
-                    <TableCell>{transaction.transaction_mode}</TableCell>
-                    <TableCell>{transaction.meal_items.join(', ')}</TableCell>
+                    <TableCell>{transaction.account_from}</TableCell>
+                    <TableCell>{transaction.account_to}</TableCell>
+                    <TableCell>{dayjs.utc(transaction.date_and_time).tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss')}</TableCell>
+                    <TableCell>
+                      {transaction.meal_items.map((item, index) => (
+                        <span key={index}>{item.name} ({item.quantity}){index !== transaction.meal_items.length - 1 && ', '}</span>
+                      ))}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

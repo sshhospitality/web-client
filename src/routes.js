@@ -18,24 +18,28 @@ import VDashboard from './pages/VendorPages/VDashboard';
 import VLiveService from './pages/VendorPages/VLiveService';
 import VHistory from './pages/VendorPages/VHistory';
 import VMenu from './pages/VendorPages/VMenu';
+import VDepartmentRegister from './pages/VendorPages/VDepartmentRegister';
+import VFeedback from './pages/VendorPages/VFeedback';
+import VendorMessDetails from './pages/VendorPages/VMessDetails';
 import VStudentList from './pages/VendorPages/VStudentList';
 import VProfile from './pages/VendorPages/VProfile';
-
+import StudentRegister from './pages/VendorPages/StudentRegister';
 import AdminDashboard from './pages/AdminPages/AdminDashboard';
 import AdminStudentDetails from './pages/AdminPages/AdminStudentDetails';
 import AdminTransactionDetails from './pages/AdminPages/AdminTransactionDetails';
 import AdminMessDetails from './pages/AdminPages/AdminMessDetails';
 import AdminMenuDetails from './pages/AdminPages/AdminMenuDetails';
 import VerificationPortal from './pages/AdminPages/VerificationPortal';
+import CollegeList from './pages/AdminPages/CollegeList';
 import VerifyIndiForm from './pages/AdminPages/VerifyIndiForm';
 import VerifyIndividualUser from './pages/AdminPages/VerifyIndividualUser';
-import StudentRegister from './pages/AdminPages/StudentRegister';
+import CollegeRegister from './pages/AdminPages/CollegeRegister';
 import MessVerificationPortal from './components/MessVerificationPortal';
 import Upload from './components/Upload';
 import SaiTransaction from './pages/AdminPages/SaiTransaction';
 import GalavTransaction from './pages/AdminPages/GalavTransaction';
 import KumarTransaction from './pages/AdminPages/KumarTransaction';
-import GalavStudents from './pages/AdminPages/GalavStudents';
+import GalavStudents from './pages/AdminPages/CollegeList';
 import KumarStudents from './pages/AdminPages/KumarStudents';
 import SaiStudents from './pages/AdminPages/SaiStudents';
 // import { useNavigate } from 'react-router-dom';
@@ -58,17 +62,22 @@ export default function Router() {
         const { person } = response.data;
         // if(!response.status==200)
         // navigate('/login', { replace: true });
-        if (person === 'Student' && (location.pathname.startsWith('/vendor') || location.pathname.startsWith('/admin')))
+        if (person === 'Student' && (location.pathname.startsWith('/vendor') || location.pathname.startsWith('/admin') || location.pathname.startsWith('/department')))
           window.location.pathname = '/dashboard';
         if (
           person === 'Vendor' &&
-          (location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/admin'))
+          (location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/admin') || location.pathname.startsWith('/department'))
         )
           window.location.pathname = '/vendor';
         if (
+          person === 'Department' &&
+          (location.pathname.startsWith('/vendor') || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/admin') ))
+          window.location.pathname = '/department';
+        if (
           person === 'Admin' &&
-          (location.pathname.startsWith('/vendor') || location.pathname.startsWith('/dashboard'))
+          (location.pathname.startsWith('/vendor') || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/department'))
         )
+
           window.location.pathname = '/admin';
       } catch (error) {
         if (error.status(401)) {
@@ -114,11 +123,28 @@ export default function Router() {
       children: [
         { path: '', element: <Navigate to="/vendor/dashboard" /> },
         { path: 'dashboard', element: <VDashboard /> },
+        { path: 'departmentRegister', element: <VDepartmentRegister /> },
+        { path: 'feedback', element: <VFeedback /> },
         { path: 'liveService', element: <VLiveService /> },
+        { path: 'messdetails', element: <VendorMessDetails /> },
         { path: 'history', element: <VHistory /> },
         { path: 'menu', element: <VMenu /> },
         { path: 'studentList', element: <VStudentList /> },
         { path: 'profile', element: <VProfile /> },
+        {path:'studentRegister',element:<StudentRegister/>}
+      ],
+    },
+    {
+      path: '/department',
+      element: <DashboardLayout />,
+      children: [
+        { path: '', element: <Navigate to="/dashboard/app" /> },
+        { path: 'app', element: <DashboardAppPage /> },
+        { path: 'history', element: <TransactionHistory /> },
+        { path: 'products', element: <ProductsPage /> },
+        { path: 'contactUs', element: <ContactUs /> },
+        // { path: 'payment', element: <Payment /> },
+        { path: 'profile', element: <Profile /> },
       ],
     },
     {
@@ -128,7 +154,7 @@ export default function Router() {
         { path: '', element: <Navigate to="/admin/dashboard" /> },
         { path: 'dashboard', element: <AdminDashboard /> },
         { path: 'studentDetails', element: <AdminStudentDetails /> },
-        { path: 'galavStudents', element: <GalavStudents /> },
+        { path: 'collegeList', element: <CollegeList /> },
         { path: 'kumarStudents', element: <KumarStudents /> },
         { path: 'saiStudents', element: <SaiStudents /> },
         { path: 'transactionDetails', element: <AdminTransactionDetails /> },
@@ -141,7 +167,7 @@ export default function Router() {
         { path: 'verifyIndiForm', element: <VerifyIndiForm /> },
         { path: 'verifyIndividualUser', element: <VerifyIndividualUser /> },
         { path: 'messVerificationPortal', element: <MessVerificationPortal /> },
-        { path: 'studentRegister', element: <StudentRegister /> },
+        { path: 'CollegeRegister', element: <CollegeRegister /> },
         { path: 'upload', element: <Upload /> },
       ],
     },

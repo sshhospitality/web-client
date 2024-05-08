@@ -31,10 +31,14 @@ export default function VProfile() {
     navigate('/login', { replace: true });
   };
   const name = localStorage.getItem('name');
+  const email = localStorage.getItem('email');
+  const cid = localStorage.getItem('cid');
+  const phone = localStorage.getItem('phone');
+  const address = localStorage.getItem('address');
   return (
     <>
       <Helmet>
-        <title> Profile Page | IIT Bhilai Dinning System </title>
+        <title> Profile Page | Naivedyam Dinning System </title>
       </Helmet>
       <section style={{ backgroundColor: '' }}>
         <MDBContainer className="py-5">
@@ -64,7 +68,7 @@ export default function VProfile() {
                 <MDBCardBody style={{ minHeight: '267px' }}>
                   <MDBRow>
                     <MDBCol sm="3">
-                      <MDBCardText>Mess Name</MDBCardText>
+                      <MDBCardText>College Name</MDBCardText>
                     </MDBCol>
                     <MDBCol sm="9">
                       <MDBCardText className="text-muted">{name}</MDBCardText>
@@ -73,30 +77,39 @@ export default function VProfile() {
                   <hr />
                   <MDBRow>
                     <MDBCol sm="3">
-                      <MDBCardText>Mess-Coordinator1</MDBCardText>
+                      <MDBCardText>Email</MDBCardText>
                     </MDBCol>
                     <MDBCol sm="9">
-                      <MDBCardText className="text-muted">Sudeep Ranjan Sahoo</MDBCardText>
+                      <MDBCardText className="text-muted">{email}</MDBCardText>
                     </MDBCol>
                   </MDBRow>
-                  <hr />
+                   <hr /> 
                   <MDBRow>
-                    <MDBCol sm="3">
-                      <MDBCardText>Mess-Coordiantor2</MDBCardText>
-                    </MDBCol>
-                    <MDBCol sm="9">
-                      <MDBCardText className="text-muted">Sudeep Ranjan Sahoo</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  {/* <hr /> */}
-                  {/* <MDBRow>
                     <MDBCol sm="3">
                       <MDBCardText>ID</MDBCardText>
                     </MDBCol>
                     <MDBCol sm="9">
-                      <MDBCardText className="text-muted">Error 404</MDBCardText>
+                      <MDBCardText className="text-muted">{cid}</MDBCardText>
                     </MDBCol>
-                  </MDBRow> */}
+                  </MDBRow> 
+                  <hr /> 
+                  <MDBRow>
+                    <MDBCol sm="3">
+                      <MDBCardText>Address</MDBCardText>
+                    </MDBCol>
+                    <MDBCol sm="9">
+                      <MDBCardText className="text-muted">{address}</MDBCardText>
+                    </MDBCol>
+                  </MDBRow> 
+                  <hr /> 
+                  <MDBRow>
+                    <MDBCol sm="3">
+                      <MDBCardText>Phone Number</MDBCardText>
+                    </MDBCol>
+                    <MDBCol sm="9">
+                      <MDBCardText className="text-muted">{phone}</MDBCardText>
+                    </MDBCol>
+                  </MDBRow> 
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>

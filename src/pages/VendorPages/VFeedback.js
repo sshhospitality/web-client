@@ -1,36 +1,54 @@
 import { Helmet } from 'react-helmet-async';
+import { filter } from 'lodash';
+import { sentenceCase } from 'change-case';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 // @mui
 import {
   Card,
   Table,
   Stack,
   Paper,
+  Avatar,
   Button,
+  Popover,
+  Checkbox,
   TableRow,
   TableBody,
   TableCell,
   Container,
   Typography,
+  IconButton,
   TableContainer,
   TablePagination,
 } from '@mui/material';
 // components
+import Label from '../../components/label';
+import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
-import SpinnerLoadingScreen from '../../components/SpinnerLoadingScreen';
 // sections
 import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user';
 // mock
+// import USERLIST from '../../_mock/user';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'id', label: 'Id', alignRight: false },
+  { id: 'rating', label: 'Rating', alignRight: false },
+  { id: 'message', label: 'Message', alignRight: false },
+  { id: 'email', label: 'Email', alignRight: false },
+  { id: 'image', label: 'Image', alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -82,36 +100,27 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map(([el]) => el);
 }
 
-export default function GalavStudents() {
-  const [stud, setStud] = useState([]);
-  const [loader, setLoader] = useState(true);
-  const navigate = useNavigate();
-  useEffect(() => {
-    async function studDet() {
-      setLoader(true);
-      try {
-        const res = await axios.post(
-          'http://localhost:5000/api/admin/Galav',
-          {
-            xhrFields: {
-              withCredentials: true,
-            },
-          },
-          { withCredentials: true }
-        );
-        setStud(res.data);
-      } catch (error) {
-        if (error.response.status === 401) {
-          navigate('/login', { replace: true });
-        }
-        console.log('Error fetching students');
-        console.log(error);
-      } finally {
-        setLoader(false);
-      }
+export default function VFeedback() {
+  const [feedback, setFeedback] = useState([]);
+  const [ratings, setRatings] = useState([]);
+  const [selectedRating, setSelectedRating] = useState('');
+
+  async function feedbackDet() {
+    try {
+      const res = await axios.post('http://localhost:5000/api/feedback/feedback_get', {}, { withCredentials: true });
+      setFeedback(res.data);
+      const allRatings = [...new Set(res.data.map((feedback) => feedback.rating))];
+      setRatings(allRatings);
+    } catch (error) {
+      console.log('Error fetching students');
+      console.log(error);
     }
-    studDet();
-  }, [navigate]);
+  }
+  useEffect(() => {
+    feedbackDet();
+  }, []);
+
+  const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
 
@@ -130,20 +139,22 @@ export default function GalavStudents() {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
-  const users = stud.map((num, index) => ({
-    id: index,
-    stud: num.name,
-    userId: num.id,
-  }));
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
+  const filteredFeedbacks = feedback.filter((student) => {
+    if (selectedRating && student.rating !== selectedRating) {
+      return false;
     }
-    setSelected([]);
-  };
+
+    return true;
+  });
+  const users = filteredFeedbacks.map((num, index) => ({
+    id: num._id,
+    name: num.name,
+    userId: num.userId,
+    rating: num.rating,
+    message: num.message,
+    email: num.email,
+  }));
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -160,61 +171,38 @@ export default function GalavStudents() {
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
+  const filteredfeedbacks = applySortFilter(users, getComparator(order, orderBy), filterName);
 
-  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
-
-  const isNotFound = !filteredUsers.length && !!filterName;
-
-  const exportPDF = () => {
-    const unit = 'pt';
-    const size = 'A4'; // Use A1, A2, A3 or A4
-    const orientation = 'portrait'; // portrait or landscape
-
-    // eslint-disable-next-line new-cap
-    const doc = new jsPDF(orientation, unit, size);
-
-    doc.setFontSize(15);
-
-    const title = 'Student List';
-    const headers = [['Name', 'Id']];
-
-    const data = stud.map((student) => [student.name, student.id]);
-
-    const content = {
-      startY: 50,
-      head: headers,
-      body: data,
-    };
-
-    doc.text(title, 40, 40);
-    autoTable(doc, content);
-
-    doc.save('report.pdf');
-  };
+  const isNotFound = !filteredfeedbacks.length && !!filterName;
 
   return (
     <>
       <Helmet>
-        <title> Student List Page | IIT Bhilai Dinning System </title>
+        <title> Feedback Lists | Naivedyam Dinning System </title>
       </Helmet>
 
       <Container>
-        <Typography margin={'1rem'} variant="h2" gutterBottom>
-          Galav Mess
+        <Typography margin={'1rem'} marginLeft={'0.5rem'} variant="h2" gutterBottom>
+          All The Feedbacks
         </Typography>
+
         <Card>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
             <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
-
-            <Button
-              variant="outlined"
-              style={{ margin: '15px 2rem', height: '2.5rem', minWidth: '140px' }}
-              onClick={exportPDF}
+            <Select
+              value={selectedRating}
+              onChange={(event) => setSelectedRating(event.target.value)}
+              displayEmpty
+              renderValue={(selected) => (selected ? selected : 'All Ratings....')}
             >
-              Download as PDF
-            </Button>
+              <MenuItem value="">All Departments</MenuItem>
+              {ratings.map((rating, index) => (
+                <MenuItem key={index} value={rating}>
+                  {rating}
+                </MenuItem>
+              ))}
+            </Select>
           </div>
-
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
@@ -225,25 +213,30 @@ export default function GalavStudents() {
                   rowCount={users.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, stud, userId } = row;
-                    const selectedUser = selected.indexOf(stud) !== -1;
+                  {filteredfeedbacks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    const { id, name, userId, rating, message, email } = row;
 
                     return (
-                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                        <TableCell padding="checkbox" />
+                      <TableRow hover key={id} tabIndex={-1} role="checkbox">
+                        <TableCell padding="checkbox">
+                          {/* <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, stud)} /> */}
+                        </TableCell>
+
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
+                            {/* <Avatar alt={name} src={avatarUrl} /> */}
                             <Typography variant="subtitle2" noWrap>
-                              {stud}
+                              {name}
                             </Typography>
                           </Stack>
                         </TableCell>
 
                         <TableCell align="left">{userId}</TableCell>
+                        <TableCell align="left">{rating}</TableCell>
+                        <TableCell align="left">{message}</TableCell>
+                        <TableCell align="left">{email}</TableCell>
                       </TableRow>
                     );
                   })}
@@ -278,18 +271,6 @@ export default function GalavStudents() {
                   </TableBody>
                 )}
               </Table>
-              {loader && <SpinnerLoadingScreen />}
-              {!loader && stud.length === 0 && (
-                <div>
-                  {' '}
-                  <Typography
-                    variant="h5"
-                    style={{ padding: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                  >
-                    No Data Found
-                  </Typography>
-                </div>
-              )}
             </TableContainer>
           </Scrollbar>
 

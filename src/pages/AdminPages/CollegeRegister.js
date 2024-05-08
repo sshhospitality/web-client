@@ -6,13 +6,17 @@ import { Container, Button, MenuItem, FormControl, Select, InputLabel } from '@m
 import axios from 'axios';
 import { LoadingContext } from '../../components/LoadingContext';
 import { handleCustomAlert } from '../../components/handleCustomAlert';
+import { set } from 'lodash';
 
-export default function StudentRegister() {
+export default function CollegeRegister() {
   const { setIsLoading } = useContext(LoadingContext);
   const [name, setName] = useState('');
-  const [userId, setUserId] = useState('');
+  const [cid, setCid] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [address, setAddress] = useState('');
+  const [phone, setPhone] = useState('');
+
     const handleFile = useCallback((e) => {
       const file = e.target.files[0];
       const reader = new FileReader();
@@ -22,10 +26,10 @@ export default function StudentRegister() {
         const rows = csv.split('\n').slice(1); // skip header
   
         rows.forEach(row => {
-          const [sNo, name, email, password, userId] = row.split(',');
+          const [sNo, name, email, password, cid,address,phone] = row.split(',');
           // Perform validation if needed
           // Then send data to backend API for each student
-          sendDataToBackend(name, email, password, userId);
+          sendDataToBackend(name, email, password, cid,address,phone);
         });
         handleCustomAlert('Registration Successful', '', 'success');
       };
@@ -36,14 +40,16 @@ export default function StudentRegister() {
   
       reader.readAsText(file);
     }, []);
-    const sendDataToBackend = useCallback(async (name, email, password, userId) => {
+    const sendDataToBackend = useCallback(async (name, email, password, cid,address,phone) => {
       // You can use fetch API or any other method to send data to your backend API
       // Example using fetch API:
       if (
         name === '' ||
-        userId === '' ||
+        cid === '' ||
         email === '' ||
-        password === ''
+        password === '' ||
+        address === '' ||
+        phone === ''
       ) {
         handleCustomAlert('Empty Field', 'Please fill all the fields', 'danger');
         return;
@@ -59,7 +65,7 @@ export default function StudentRegister() {
         try {
           const response = await axios.post(
             `${process.env.REACT_APP_API}/api/auth/signup`,
-            { email, password, userId, name, person: "Student" },
+            { email, password, name, person: "College",cid,address,phone },
             { withCredentials: true }
           );
           // if (responce.status === 200) {
@@ -82,9 +88,11 @@ export default function StudentRegister() {
   const handleIRegister = async () => {
     if (
       name === '' ||
-      userId === '' ||
+      cid === '' ||
       email === '' ||
-      password === ''
+      password === '' ||
+      address === '' ||
+      phone === ''
     ) {
       handleCustomAlert('Empty Field', 'Please fill all the fields', 'danger');
       return;
@@ -100,12 +108,18 @@ export default function StudentRegister() {
       try {
         const responce = await axios.post(
           `${process.env.REACT_APP_API}/api/auth/signup`,
-          { email, password, userId, name, person: "Student" },
+          { email, password, cid, name, person: "College",address,phone },
           { withCredentials: true }
         );
         if (responce.status === 200) {
           handleCustomAlert('Registration Successful', '', 'success');
         }
+        setName('');
+        setCid('');
+        setEmail('');
+        setPassword('');
+        setAddress('');
+        setPhone('');
       } catch (error) {
         console.log(error);
       } finally {
@@ -142,8 +156,8 @@ export default function StudentRegister() {
               label="Id Number"
               fullWidth
               variant="standard"
-              value={userId}
-              onChange={(event) => setUserId(event.target.value)}
+              value={cid}
+              onChange={(event) => setCid(event.target.value)}
             />
           </Grid>
           <Grid item xs={12} md={12}>
@@ -166,6 +180,28 @@ export default function StudentRegister() {
               variant="standard"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12} md={12}>
+            <TextField
+              required
+              id="phone"
+              label="Phone Number"
+              fullWidth
+              variant="standard"
+              value={phone}
+              onChange={(event) => setPhone(event.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12} md={12}>
+            <TextField
+              required
+              id="address"
+              label="Address"
+              fullWidth
+              variant="standard"
+              value={address}
+              onChange={(event) => setAddress(event.target.value)}
             />
           </Grid>
           <Grid item xs={12} md={12} display={'flex'} justifyContent={'end'}>

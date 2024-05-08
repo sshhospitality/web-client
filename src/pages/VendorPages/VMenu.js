@@ -60,7 +60,7 @@ export default function ProductsPage() {
   return (
     <>
       <Helmet>
-        <title> Menu | IIT Bhilai Dinning System</title>
+        <title> Menu | Naivedyam Dinning System</title>
       </Helmet>
 
       <Container>

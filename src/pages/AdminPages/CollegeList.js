@@ -44,16 +44,10 @@ import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
-  // { id: 'id', label: 'From', alignRight: false },
-  { id: 'id', label: 'Id', alignRight: false },
-  { id: 'department', label: 'Department', alignRight: false },
-  { id: 'year', label: 'Year', alignRight: false },
+  { id: 'cid', label: 'CId', alignRight: false },
+  { id: 'address', label: 'Address', alignRight: false },
   { id: 'phone', label: 'Phone Number', alignRight: false },
-  { id: 'isEnrolled', label: 'Is Enrolled', alignRight: false },
   { id: 'Actions', label: 'Actions', alignRight: false },
-
-  // { id: 'mode', label : 'Mode', alignRight: false },
-  // { id: 'ref', label : 'Reference', alignRight: false }
 ];
 
 // ----------------------------------------------------------------------
@@ -105,37 +99,20 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map(([el]) => el);
 }
 
-export default function UserPage() {
-  const [stud, setStud] = useState([]);
-  const [firstVisitH, setFirstVisitH] = useState(true);
-  const mess = localStorage.getItem('name');
-  const [departments, setDepartments] = useState([]);
-  const [years, setYears] = useState([]);
-  const [selectedDepartment, setSelectedDepartment] = useState('');
-  const [selectedYear, setSelectedYear] = useState('');
+export default function CollegeList() {
+  const [college, setCollege] = useState([]);
 
-  async function studDet() {
+  async function collegeDet() {
     try {
-      const res = await axios.post('http://localhost:5000/api/stud/students', { mess }, { withCredentials: true });
-      setStud(res.data);
-      const allDepartments = [...new Set(res.data.map((student) => student.department))];
-      setDepartments(allDepartments);
-      const allYears = [...new Set(res.data.map((student) => student.year))];
-      setYears(allYears);
-      console.log(res.data);
-      // localStorage.setItem('txn',res.data);
+      const res = await axios.get('http://localhost:5000/api/admin/college_get',{ withCredentials: true });
+      setCollege(res.data);
     } catch (error) {
-      console.log('Error fetching students');
+      console.log('Error fetching colleges');
       console.log(error);
     }
   }
   useEffect(() => {
-    // const hasVisitedBeforeH = sessionStorage.getItem('hasVisitedPageH');
-    // if (!hasVisitedBeforeH) {
-    studDet();
-    //   setFirstVisitH(false);
-    //   sessionStorage.setItem('hasVisitedPageH', 'true');
-    // }
+    collegeDet();
   }, []);
   // console.log(USERLIST)
 
@@ -171,31 +148,14 @@ export default function UserPage() {
     setOrderBy(property);
   };
 
-  const filteredStudents = stud.filter((student) => {
-    if (selectedDepartment && student.department !== selectedDepartment) {
-      return false;
-    }
-    if (selectedYear && student.year !== selectedYear) {
-      return false;
-    }
-    return true;
-  });
-  const users = filteredStudents.map((num, index) => ({
+  const colleges = college.map((num, index) => ({
     id: num._id,
-    stud: num.name,
-    userId: num.userId,
-    department: num.department,
-    year: num.year,
+    name: num.name,
+    cid: num.cid,
+    address: num.address,
     phone: num.phone,
-    isEnrolled: num.isEnrolled,
   }));
-  // const users = {
-  //   stud: 'nishant',
-  //   userId: 12241170
-  // }
   const handleUserClick = () => {
-    // setSelected(user);
-    console.log('helo', selected);
     setIsEditDialogOpen(true);
   };
 
@@ -204,31 +164,23 @@ export default function UserPage() {
   };
 
   const handleInputChange = (event) => {
-    const { name, value, checked } = event.target;
-    if (name === 'isEnabled') {
-      // Update the state with the new value
-      setEditedDetails((prevState) => ({
-        ...prevState,
-        [name]: checked,
-      }));
-    } else {
-      setEditedDetails({
-        ...editedDetails,
-        [name]: value,
-      });
-    }
+    const { name, value } = event.target;
+    setEditedDetails({
+      ...editedDetails,
+      [name]: value,
+    });
   };
 
   const handleSaveChanges = async () => {
     try {
       // Call your PUT request to update the user details
       console.log(editedDetails);
-      await axios.post(`http://localhost:5000/api/stud/updateprofile/${selected.id}`, editedDetails, {
+      await axios.post(`http://localhost:5000/api/college/college_update/${selected.id}`, editedDetails, {
         withCredentials: true,
       });
       // Close the dialog after successful update
       setIsEditDialogOpen(false);
-      studDet();
+      collegeDet();
       // Optionally, you may want to refetch the user list to reflect the changes immediately
     } catch (error) {
       console.error('Error updating user details:', error);
@@ -238,27 +190,13 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
+      const newSelecteds = colleges.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -274,24 +212,19 @@ export default function UserPage() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
-  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - colleges.length) : 0;
+  const filteredColleges = applySortFilter(colleges, getComparator(order, orderBy), filterName);
 
-  const isNotFound = !filteredUsers.length && !!filterName;
+  const isNotFound = !filteredColleges.length && !!filterName;
 
-  // console.log(txn[0]);
-  // txn.map((numb, index) => (
-  //   console.log(numb.account_from);
-  //   // return  numb ;
-  // ));
   const handleUserDelete = () => {
     try {
       // Call your DELETE request to delete the user
       console.log(selected.id);
-      axios.delete(`http://localhost:5000/api/stud/deletestud/${selected.id}`, { withCredentials: true });
+      axios.delete(`http://localhost:5000/api/college/college_del/${selected.id}`, { withCredentials: true });
       // Close the dialog after successful deletion
       handleCloseMenu();
-      studDet();
+      collegeDet();
       // Optionally, you may want to refetch the user list to reflect the changes immediately
     } catch (error) {
       console.error('Error deleting user:', error);
@@ -310,15 +243,13 @@ export default function UserPage() {
     doc.setFontSize(15);
 
     const title = 'Student List';
-    const headers = [['Name', 'Id', 'Year', 'Department', 'Phone', 'Enrolled']];
+    const headers = [['Name', 'Address', 'Phone', 'CID']];
 
-    const data = stud.map((student) => [
+    const data = college.map((student) => [
       student.name,
-      student.userId,
-      student.year,
-      student.department,
+      student.address,
       student.phone,
-      student.isEnrolled ? 'True' : ' False',
+      student.cid,
     ]);
 
     const content = {
@@ -330,17 +261,17 @@ export default function UserPage() {
     doc.text(title, 40, 40);
     autoTable(doc, content);
 
-    doc.save('Student List.pdf');
+    doc.save('College List.pdf');
   };
   return (
     <>
       <Helmet>
-        <title> Student List Page | Naivedyam Dinning System </title>
+        <title> College List Page | Naivedyam Dinning System </title>
       </Helmet>
 
       <Container>
         <Typography margin={'1rem'} marginLeft={'0.5rem'} variant="h2" gutterBottom>
-          All The Students
+          All The Colleges
         </Typography>
 
         <Card>
@@ -354,33 +285,6 @@ export default function UserPage() {
             >
               Download as PDF
             </Button>
-            <Select
-              value={selectedDepartment}
-              onChange={(event) => setSelectedDepartment(event.target.value)}
-              displayEmpty
-              renderValue={(selected) => (selected ? selected : 'All Departments....')}
-            >
-              <MenuItem value="">All Departments</MenuItem>
-              {departments.map((department, index) => (
-                <MenuItem key={index} value={department}>
-                  {department}
-                </MenuItem>
-              ))}
-            </Select>
-
-            <Select
-              value={selectedYear}
-              onChange={(event) => setSelectedYear(event.target.value)}
-              displayEmpty
-              renderValue={(selected) => (selected ? selected : 'All Years....')}
-            >
-              <MenuItem value="">All Years</MenuItem>
-              {years.map((year, index) => (
-                <MenuItem key={index} value={year}>
-                  {year}
-                </MenuItem>
-              ))}
-            </Select>
           </div>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -389,14 +293,14 @@ export default function UserPage() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={users.length}
+                  rowCount={colleges.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, stud, userId, department, year, phone, isEnrolled } = row;
+                  {filteredColleges.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    const { id, name, cid,phone, address } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox">
@@ -408,16 +312,14 @@ export default function UserPage() {
                           <Stack direction="row" alignItems="center" spacing={2}>
                             {/* <Avatar alt={name} src={avatarUrl} /> */}
                             <Typography variant="subtitle2" noWrap>
-                              {stud}
+                              {name}
                             </Typography>
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left">{userId}</TableCell>
-                        <TableCell align="left">{department}</TableCell>
-                        <TableCell align="left">{year}</TableCell>
+                        <TableCell align="left">{cid}</TableCell>
+                        <TableCell align="left">{address}</TableCell>
                         <TableCell align="left">{phone}</TableCell>
-                        <TableCell align="left">{isEnrolled ? 'True' : ' False'}</TableCell>
                         <TableCell align="left">
                           <IconButton onClick={(event) => handleOpenMenu(event, row)}>
                             <Iconify icon={'eva:more-vertical-fill'} />
@@ -463,7 +365,7 @@ export default function UserPage() {
           <TablePagination
             rowsPerPageOptions={[10, 20, 30]}
             component="div"
-            count={users.length}
+            count={colleges.length}
             // count={"10"}
             rowsPerPage={rowsPerPage}
             page={page}
@@ -512,40 +414,29 @@ export default function UserPage() {
             type="text"
             name="name"
             fullWidth
-            value={editedDetails.name || selected?.stud || ''}
+            value={editedDetails.name || selected?.name || ''}
             onChange={handleInputChange}
           />
           <TextField
             autoFocus
             margin="dense"
-            id="userId"
-            label="User ID"
+            id="cid"
+            label="College ID"
             type="text"
-            name="userId"
+            name="cid"
             fullWidth
-            value={editedDetails.userId || selected?.userId || ''}
+            value={editedDetails.cid || selected?.cid || ''}
             onChange={handleInputChange}
           />
           <TextField
             autoFocus
             margin="dense"
-            id="department"
-            label="Department"
+            id="address"
+            label="Address"
             type="text"
-            name="department"
+            name="address"
             fullWidth
-            value={editedDetails.department || selected?.department || ''}
-            onChange={handleInputChange}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="year"
-            label="Year"
-            type="text"
-            name="year"
-            fullWidth
-            value={editedDetails.year || selected?.year || ''}
+            value={editedDetails.address || selected?.address || ''}
             onChange={handleInputChange}
           />
           <TextField
@@ -559,15 +450,6 @@ export default function UserPage() {
             value={editedDetails.phone || selected?.phone || ''}
             onChange={handleInputChange}
           />
-
-          <Checkbox
-            checked={editedDetails.isEnabled || selected?.isEnrolled || false}
-            onChange={handleInputChange}
-            id="isEnabled"
-            name="isEnabled"
-            inputProps={{ 'aria-label': 'is enabled checkbox' }}
-          />
-          {/* Add additional TextField components for other fields */}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose}>Cancel</Button>

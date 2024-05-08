@@ -12,14 +12,14 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
-    title: 'Live Service',
-    path: '/vendor/liveService',
-    icon: icon('ic_cart'),
-  },
-  {
     title: 'History',
     path: '/vendor/history',
     icon: icon('ic_user'),
+  },
+  {
+    title: 'Register Student',
+    path: '/vendor/studentRegister',
+    icon: icon('ic_lock'),
   },
   {
     title: 'Student List',
@@ -27,9 +27,29 @@ const navConfig = [
     icon: icon('ic_blog'),
   },
   {
+    title: 'Department List',
+    path: '/vendor/studentList',
+    icon: icon('ic_blog'),
+  },
+  {
+    title: 'Register Department',
+    path: '/vendor/departmentRegister',
+    icon: icon('ic_blog'),
+  },
+  {
     title: 'Menu',
     path: '/vendor/menu',
     icon: icon('ic_cart'),
+  },
+  {
+    title: 'Mess Details',
+    path: '/vendor/messdetails',
+    icon: icon('ic_cart'),
+  },
+  {
+    title: 'Feedback',
+    path: '/vendor/feedback',
+    icon: icon('ic_lock'),
   },
   {
     title: 'Profile',

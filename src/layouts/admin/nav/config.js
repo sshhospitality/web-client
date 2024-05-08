@@ -22,23 +22,23 @@ const navConfig = [
     icon: icon('ic_user'),
   },
   {
-    title: 'Mess Committee Details',
-    path: '/admin/messDetails',
+    title: 'College Details',
+    path: '/admin/collegeList',
     icon: icon('ic_lock'),
   },
-  {
+/*   {
     title: 'Menu Details',
     path: '/admin/menuDetails',
     icon: icon('ic_cart'),
-  },
-  {
+  }, */
+/*   {
     title: 'Verification Portal',
     path: '/admin/verificationPortal',
     icon: icon('ic_blog'),
-  },
+  }, */
   {
-    title: 'Student Registration',
-    path: '/admin/studentRegister',
+    title: 'College Registration',
+    path: '/admin/CollegeRegister',
     icon: icon('ic_lock'),
   },
 ];

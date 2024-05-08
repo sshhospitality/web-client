@@ -32,6 +32,7 @@ export default function LoginForm() {
           if (person === 'Student') navigate('/dashboard/app', { replace: true });
           else if (person === 'College') navigate('/vendor/dashboard', { replace: true });
           else if (person === 'Admin') navigate('/admin/dashboard', { replace: true });
+          else if (person === 'Department') navigate('/department/dashboard', { replace: true });
         })
         .catch((err) => {
           if (err.response.status === 401) {
@@ -62,6 +63,7 @@ export default function LoginForm() {
 
       if (response.data.person === 'Student') navigate('/dashboard/app', { replace: true });
       else if (response.data.person === 'College') navigate('/vendor/dashboard', { replace: true });
+      else if (response.data.person === 'Deprtment') navigate('/department/dashboard', { replace: true });
       else navigate('/admin/dashboard', { replace: true });
     } catch (error) {
       // Handle error response here

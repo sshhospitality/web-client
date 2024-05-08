@@ -79,7 +79,7 @@ export default function AdminTransactionDetails() {
     async function fetchTransactions() {
       try {
         const res = await axios.post(
-          `http://localhost:5000/api/admin/transactions?page=${page + 1}`,
+          `http://localhost:5000/api/txn/history?page=${page + 1}`,
           {
             from: txnFrom,
             to: txnTo,
@@ -272,7 +272,7 @@ export default function AdminTransactionDetails() {
 
       <Container>
         <Typography margin={'1rem'} marginLeft={'0.5rem'} variant="h2" gutterBottom>
-          Know The Mess Transactions
+          Know All The Transactions
         </Typography>
         <Typography margin={'1rem'} variant="h5" gutterBottom>
           [Latest Transactions]
@@ -330,6 +330,7 @@ export default function AdminTransactionDetails() {
                   <TableCell>Ref No.</TableCell>
                   <TableCell>Date</TableCell>
                   <TableCell>From</TableCell>
+                  <TableCell>Student Id</TableCell>
                   <TableCell>Meal Type</TableCell>
                   <TableCell>Mode</TableCell>
                   <TableCell>Meal Items</TableCell>
@@ -340,7 +341,8 @@ export default function AdminTransactionDetails() {
                   <TableRow key={txn._id}>
                     <TableCell>{txn.transaction_ref_no}</TableCell>
                     <TableCell>{txn.timestamp}</TableCell>
-                    <TableCell>{txn.account_from}</TableCell>
+                    <TableCell>{txn.studentDetails.name}</TableCell>
+                    <TableCell>{txn.studentDetails.userId}</TableCell>
                     <TableCell>{txn.mealType}</TableCell>
                     <TableCell>{txn.transaction_mode}</TableCell>
                     <TableCell>{txn.meal_items.join(', ')}</TableCell>

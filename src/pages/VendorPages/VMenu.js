@@ -70,7 +70,7 @@ export default function VMenu() {
   async function fetchMenu() {
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/menu/list`,
+        `${process.env.REACT_APP_API}/menu/list`,
         { xhrFields: { withCredentials: true } },
         { withCredentials: true }
       );
@@ -128,7 +128,7 @@ export default function VMenu() {
     console.log(day)
     try {
       await axios.post(
-        'http://localhost:5000/api/college/update-Menu',
+        `${process.env.REACT_APP_API}/college/update-Menu`,
         { dayName: day, meals: JSON.parse(transformedString) },
         { withCredentials: true }
       );

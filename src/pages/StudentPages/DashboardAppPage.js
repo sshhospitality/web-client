@@ -47,7 +47,7 @@ export default function DashboardAppPage() {
     async function fetchData() {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API}/api/verify/details`,
+          `${process.env.REACT_APP_API}/verify/details`,
           { xhrFields: { withCredentials: true } },
           { withCredentials: true }
         );
@@ -87,7 +87,7 @@ export default function DashboardAppPage() {
     async function fetchChartData() {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API}/api/verify/chartdetails`,
+          `${process.env.REACT_APP_API}/verify/chartdetails`,
           { xhrFields: { withCredentials: true } },
           { withCredentials: true }
         );
@@ -147,7 +147,7 @@ export default function DashboardAppPage() {
     async function getMenu(){
       try {
         const { data } = await axios.post(
-          `http://localhost:5000/api/menu/list`,
+          `${process.env.REACT_APP_API}/menu/list`,
           {
             xhrFeilds: {
               withCredentials: true,
@@ -163,7 +163,7 @@ export default function DashboardAppPage() {
     }
     async function getDayWiseMeal(){
       const response = await axios.post(
-        `localhost:5000/api/verify/mealtimeline`,
+        `${process.env.REACT_APP_API}/verify/mealtimeline`,
         { xhrFields: { withCredentials: true } },
         { withCredentials: true }
       );

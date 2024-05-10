@@ -71,7 +71,7 @@ export default function ContactUs() {
   useEffect(() => {
     async function updateMDetails() {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API}/api/admin/getadmindetails/`, {
+        const response = await axios.get(`${process.env.REACT_APP_API}/admin/getadmindetails/`, {
           withCredentials: true,
         });
         const data = response.data;
@@ -144,7 +144,7 @@ export default function ContactUs() {
   };
   const makePostRequest = async (requestData) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/feedback/feedback_post', requestData, {
+      const response = await axios.post(`${process.env.REACT_APP_API}/feedback/feedback_post`, requestData, {
         headers: {
           'Content-Type': 'application/json', // Set the content type to JSON
         },

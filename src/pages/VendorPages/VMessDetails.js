@@ -23,7 +23,7 @@ export default function VendorMessDetails() {
   };
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/getadmindetails', { withCredentials: true });
+      const response = await axios.get(`${process.env.REACT_APP_API}/admin/getadmindetails`, { withCredentials: true });
       const data = response.data;
       console.log(data);
       const vendorRepresentatives = data.filter((item) => item.Position === 'vendor_representative');
@@ -44,7 +44,7 @@ export default function VendorMessDetails() {
   };
   const handleDeleteClick = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/admin/deleteRepresentative/${id}`, { withCredentials: true });
+      await axios.delete(`${process.env.REACT_APP_API}/admin/deleteRepresentative/${id}`, { withCredentials: true });
       // Refresh data after delete
       fetchData();
     } catch (error) {
@@ -54,7 +54,7 @@ export default function VendorMessDetails() {
   const handleEditSave = async (id,positionnew) => {
     try {
       await axios.post(
-        `http://localhost:5000/api/admin/editadmindetails/${id}`,
+        `${process.env.REACT_APP_API}/admin/editadmindetails/${id}`,
         {
           position:positionnew,
           name: editName,
@@ -82,7 +82,7 @@ export default function VendorMessDetails() {
 
       // Send the request with the array of persons
       await axios.post(
-        'http://localhost:5000/api/admin/admindetails',
+        `${process.env.REACT_APP_API}/admin/admindetails`,
         { persons },
         {
           withCredentials: true,

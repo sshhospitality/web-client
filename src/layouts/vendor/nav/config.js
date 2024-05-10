@@ -12,29 +12,34 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
-    title: 'History',
+    title: 'Department List',
+    path: '/vendor/departmentList',
+    icon: icon('ic_people'),
+  },
+  {
+    title: 'Department History',
     path: '/vendor/history',
+    icon: icon('ic_user'),
+  },
+  {
+    title: 'Register Department',
+    path: '/vendor/departmentRegister',
+    icon: icon('ic_register'),
+  },
+  {
+    title: 'Student List',
+    path: '/vendor/studentList',
+    icon: icon('ic_people'),
+  },
+  {
+    title: 'Student History',
+    path: '/vendor/studentHistory',
     icon: icon('ic_user'),
   },
   {
     title: 'Register Student',
     path: '/vendor/studentRegister',
-    icon: icon('ic_lock'),
-  },
-  {
-    title: 'Student List',
-    path: '/vendor/studentList',
-    icon: icon('ic_blog'),
-  },
-  {
-    title: 'Department List',
-    path: '/vendor/departmentList',
-    icon: icon('ic_blog'),
-  },
-  {
-    title: 'Register Department',
-    path: '/vendor/departmentRegister',
-    icon: icon('ic_blog'),
+    icon: icon('ic_register'),
   },
   {
     title: 'Menu',
@@ -49,7 +54,7 @@ const navConfig = [
   {
     title: 'Feedback',
     path: '/vendor/feedback',
-    icon: icon('ic_lock'),
+    icon: icon('ic_feedback'),
   },
   {
     title: 'Profile',

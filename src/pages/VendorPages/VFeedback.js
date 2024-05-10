@@ -107,7 +107,7 @@ export default function VFeedback() {
 
   async function feedbackDet() {
     try {
-      const res = await axios.post('http://localhost:5000/api/feedback/feedback_get', {}, { withCredentials: true });
+      const res = await axios.post(`${process.env.REACT_APP_API}/feedback/feedback_get`, {}, { withCredentials: true });
       setFeedback(res.data);
       const allRatings = [...new Set(res.data.map((feedback) => feedback.rating))];
       setRatings(allRatings);
@@ -195,7 +195,7 @@ export default function VFeedback() {
               displayEmpty
               renderValue={(selected) => (selected ? selected : 'All Ratings....')}
             >
-              <MenuItem value="">All Departments</MenuItem>
+              <MenuItem value="">All Ratings</MenuItem>
               {ratings.map((rating, index) => (
                 <MenuItem key={index} value={rating}>
                   {rating}

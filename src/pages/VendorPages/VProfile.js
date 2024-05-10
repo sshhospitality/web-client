@@ -25,10 +25,18 @@ export default function VProfile() {
   const navigate = useNavigate();
   const handleOut = async (e) => {
     e.preventDefault();
-    localStorage.clear();
-    sessionStorage.clear();
-    const res = await axios.post('http://localhost:5000/api/auth/logout', {xhrFields:{withCredentials: true}},{withCredentials: true});
-    navigate('/login', { replace: true });
+    const res = await axios.post(
+      `${process.env.REACT_APP_API}/auth/logout`,
+      { xhrFields: { withCredentials: true } },
+      { withCredentials: true }
+    );
+    if (res.status(200)) {
+      console.log('logged out');
+
+      localStorage.clear();
+      sessionStorage.clear();
+      navigate('/login', { replace: true });
+    }
   };
   const name = localStorage.getItem('name');
   const email = localStorage.getItem('email');

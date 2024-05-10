@@ -104,7 +104,7 @@ export default function VDepartmentList() {
 
   async function collegeDet() {
     try {
-      const res = await axios.get('http://localhost:5000/api/department/department_get',{ withCredentials: true });
+      const res = await axios.get(`${process.env.REACT_APP_API}/department/department_get`,{ withCredentials: true });
       setCollege(res.data);
     } catch (error) {
       console.log('Error fetching colleges');
@@ -175,7 +175,7 @@ export default function VDepartmentList() {
     try {
       // Call your PUT request to update the user details
       console.log(editedDetails);
-      await axios.post(`http://localhost:5000/api/department/department_update/${selected.id}`, editedDetails, {
+      await axios.post(`${process.env.REACT_APP_API}/department/department_update/${selected.id}`, editedDetails, {
         withCredentials: true,
       });
       // Close the dialog after successful update
@@ -221,7 +221,7 @@ export default function VDepartmentList() {
     try {
       // Call your DELETE request to delete the user
       console.log(selected.id);
-      axios.delete(`http://localhost:5000/api/department/department_del/${selected.id}`, { withCredentials: true });
+      axios.delete(`${process.env.REACT_APP_API}/department/department_del/${selected.id}`, { withCredentials: true });
       // Close the dialog after successful deletion
       handleCloseMenu();
       collegeDet();

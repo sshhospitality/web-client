@@ -116,7 +116,7 @@ export default function UserPage() {
 
   async function studDet() {
     try {
-      const res = await axios.post('http://localhost:5000/api/stud/students', { mess }, { withCredentials: true });
+      const res = await axios.post(`${process.env.REACT_APP_API}/stud/students`, { mess }, { withCredentials: true });
       setStud(res.data);
       const allDepartments = [...new Set(res.data.map((student) => student.department))];
       setDepartments(allDepartments);
@@ -223,7 +223,7 @@ export default function UserPage() {
     try {
       // Call your PUT request to update the user details
       console.log(editedDetails);
-      await axios.post(`http://localhost:5000/api/stud/updateprofile/${selected.id}`, editedDetails, {
+      await axios.post(`${process.env.REACT_APP_API}/stud/updateprofile/${selected.id}`, editedDetails, {
         withCredentials: true,
       });
       // Close the dialog after successful update
@@ -288,7 +288,7 @@ export default function UserPage() {
     try {
       // Call your DELETE request to delete the user
       console.log(selected.id);
-      axios.delete(`http://localhost:5000/api/stud/deletestud/${selected.id}`, { withCredentials: true });
+      axios.delete(`${process.env.REACT_APP_API}/stud/deletestud/${selected.id}`, { withCredentials: true });
       // Close the dialog after successful deletion
       handleCloseMenu();
       studDet();

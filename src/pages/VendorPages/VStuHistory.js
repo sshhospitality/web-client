@@ -27,11 +27,10 @@ import { exportPDF } from '../../utils/functions/pdf_download';
 import { handleCustomAlert } from '../../components/handleCustomAlert';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { Select, MenuItem } from '@mui/material';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export default function VHistory() {
+export default function VStuHistory() {
   const [transactions, setTransactions] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -46,9 +45,9 @@ export default function VHistory() {
   const [order, setOrder] = useState('asc');
 
   const [selected, setSelected] = useState([]);
-
+  
   const [orderBy, setOrderBy] = useState('name');
-  const [filteredTransaction, setFilteredTransaction] = useState([]);
+  const [filteredTransaction,setFilteredTransaction] = useState([]);
   const [filterName, setFilterName] = useState('');
   const { setIsLoading } = useContext(LoadingContext);
   useEffect(() => {
@@ -56,7 +55,7 @@ export default function VHistory() {
       try {
         console.log(txnFrom);
         const res = await axios.post(
-          `${process.env.REACT_APP_API}/department/list_of_dept_txns?page=${page + 1}`,
+          `${process.env.REACT_APP_API}/txn/history?page=${page + 1}`,
           {
             from: txnFrom,
             to: txnTo,
@@ -85,34 +84,12 @@ export default function VHistory() {
   const handleFilterByName = (event) => {
     const searchTerm = event.target.value.toLowerCase();
     setFilterName(searchTerm); // Update filter value
-    setFilteredTransaction(
-      transactions.filter((transaction) => transaction.departmentDetails.name.toLowerCase().includes(searchTerm))
-    );
-  };
-
-  const handleStatusChange = async (event, transactionId) => {
-    const newStatus = event.target.value;
-    console.log(newStatus);
-    try {
-      await axios.post(`${process.env.REACT_APP_API}/department/depttxn_update/${transactionId}`, {
-        status: newStatus
-      },
-      { withCredentials: true }  
-    );
-      // Assuming you need to update the transactions list after changing the status
-      const updatedTransactions = transactions.map(transaction =>
-        transaction._id === transactionId ? { ...transaction, status: newStatus } : transaction
-      );
-      setTransactions(updatedTransactions);
-      setFilteredTransaction(updatedTransactions); // Update filtered transactions if necessary
-    } catch (error) {
-      console.error('Error updating status:', error);
-      // Handle error
-    }
-  };
+    setFilteredTransaction(transactions.filter((transaction) =>
+      transaction.studentDetails.name.toLowerCase().includes(searchTerm)
+    ));
+  };  
   
-
-  const handleUpdate = async () => {
+    const handleUpdate = async () => {
     // Cancel the previous request, if there is one
     if (cancelTokenSourceRef.current) {
       cancelTokenSourceRef.current.cancel('New request made');
@@ -128,7 +105,7 @@ export default function VHistory() {
       setLoader(true);
       try {
         const res = await axios.post(
-          `${process.env.REACT_APP_API}/department/list_of_dept_txns?page=${page + 1}`,
+          `${process.env.REACT_APP_API}/txn/history?page=${page + 1}`,
           {
             from: txnFrom,
             to: txnTo,
@@ -152,11 +129,11 @@ export default function VHistory() {
   return (
     <>
       <Helmet>
-        <title> Department Transaction Page | Naivedyam Dinning System </title>
+        <title> Student Transaction Page | Naivedyam Dinning System </title>
       </Helmet>
       <Container>
         <Typography margin={'1rem'} marginLeft={'0.5rem'} variant="h2" gutterBottom>
-          All Departments Transactions
+          All Students Transactions
         </Typography>
         <Typography margin={'1rem'} variant="h5" gutterBottom>
           [Latest Transactions]
@@ -189,16 +166,15 @@ export default function VHistory() {
             </div>
           </div>
           <TableContainer component={Paper}>
-            <Table>
+          <Table>
               <TableHead>
                 <TableRow>
                   <TableCell>Ref No.</TableCell>
                   <TableCell>Timestamp</TableCell>
                   <TableCell>From</TableCell>
-                  <TableCell>Date&Time</TableCell>
+                  <TableCell>Transaction Mode</TableCell>
+                  <TableCell>Meal Type</TableCell>
                   <TableCell>Meal Items</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Update Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -206,29 +182,10 @@ export default function VHistory() {
                   <TableRow key={transaction._id}>
                     <TableCell>{transaction.transaction_ref_no}</TableCell>
                     <TableCell>{transaction.timestamp}</TableCell>
-                    <TableCell>{transaction.departmentDetails.name}</TableCell>
-                    <TableCell>
-                      {dayjs.utc(transaction.date_and_time).tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss')}
-                    </TableCell>
-                    <TableCell>
-                      {transaction.meal_items.map((item, index) => (
-                        <span key={index}>
-                          {item.name} ({item.quantity}){index !== transaction.meal_items.length - 1 && ', '}
-                        </span>
-                      ))}
-                    </TableCell>
-                    <TableCell>{transaction.status}</TableCell>
-                    <TableCell>
-                      <Select
-                        value={transaction.status}
-                        onChange={(event) => handleStatusChange(event, transaction._id)}
-                      >
-                        <MenuItem value="Request">Request</MenuItem>
-                        <MenuItem value="Approved">Approved</MenuItem>
-                        <MenuItem value="Rejected">Rejected</MenuItem>
-                        <MenuItem value="Completed">Completed</MenuItem>
-                      </Select>
-                    </TableCell>
+                    <TableCell>{transaction.studentDetails.name}</TableCell>
+                    <TableCell>{transaction.transaction_mode}</TableCell>
+                    <TableCell>{transaction.mealType}</TableCell>
+                    <TableCell>{transaction.meal_items.join(', ')}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

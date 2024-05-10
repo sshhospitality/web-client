@@ -64,7 +64,7 @@ export default function VDepartmentRegister() {
         setIsLoading(true);
         try {
           const response = await axios.post(
-            `${process.env.REACT_APP_API}/api/auth/signup`,
+            `${process.env.REACT_APP_API}/auth/signup`,
             { email, password, name, person: "Department", did,address,phone },
             { withCredentials: true }
           );
@@ -107,7 +107,7 @@ export default function VDepartmentRegister() {
       setIsLoading(true);
       try {
         const responce = await axios.post(
-          `${process.env.REACT_APP_API}/api/auth/signup`,
+          `${process.env.REACT_APP_API}/auth/signup`,
           { email, password, did, name, person: "Department",address,phone },
           { withCredentials: true }
         );

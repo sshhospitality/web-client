@@ -52,7 +52,6 @@ export default function VDashboard() {
       );
       // If the response is successful, you can access the protected user data here
       const user = response.data.userInfo;
-      console.log(user);
       localStorage.setItem('name', user.name);
       localStorage.setItem('phone', user.phone);
       localStorage.setItem('cid', user.cid);
@@ -84,13 +83,13 @@ export default function VDashboard() {
         { xhrFields: { withCredentials: true } },
         { withCredentials: true }
       );
-      const DayWiseDetails = response.data.transactions;
+      const DayWiseDetails = response.data.mealTypeCountsForToday;
       const formattedDayWiseData = DayWiseDetails.map((item) => ({
         label: item.mealType,
         value: item.count,
       }));
       setDayWiseData(formattedDayWiseData);
-      console.log(formattedDayWiseData);
+      console.log(DayWiseDetails);
       // const formattedChartData = chartDetails[0].mealTypeCounts.map((item) => ({
       //   label: item.mealType,
       //   value: item.count,
@@ -143,18 +142,15 @@ export default function VDashboard() {
   async function fetchChartData() {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API}/api/verify/chartdetails`,
+        `${process.env.REACT_APP_API}/verify/chartdetails`,
         { xhrFields: { withCredentials: true } },
         { withCredentials: true }
       );
       const chartDetails = response.data.mealTypeCountsByMonth;
-      console.log(chartDetails[0].mealTypeCounts);
-
       const formattedChartData = chartDetails[0].mealTypeCounts.map((item) => ({
         label: item.mealType,
         value: item.count,
       }));
-      console.log(formattedChartData);
       setChartData(formattedChartData);
 
       // Initialize an object to store counts for each meal type
@@ -193,7 +189,6 @@ export default function VDashboard() {
       setSnacksCounts(mealTypeCounts.Snacks);
       setDinnerCounts(mealTypeCounts.Dinner);
       setgrace1DinnerCounts(mealTypeCounts.Grace1_Dinner);
-      console.log(mealTypeCounts.Lunch);
     } catch (error) {
       console.log(error);
     }
@@ -209,8 +204,7 @@ export default function VDashboard() {
         },
         { withCredentials: true }
       );
-      setMenu(data);
-      console.log(data)
+      setMenu(data[0]["days"]);
     } catch (error) {
       console.log(error);
     }
@@ -224,11 +218,9 @@ export default function VDashboard() {
   useEffect(() => {
     menu.forEach((d) => {
       if (d.name === day) {
-        console.log(d.meals);
         updtmenu(d.meals);
       }
     });
-    console.log(todaymenu);
   }, [menu, day]);
   const transformedData = todaymenu.map((menu, index) => ({
     id: menu._id, // Assuming _id is available in your database data

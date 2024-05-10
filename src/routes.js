@@ -25,6 +25,7 @@ import VFeedback from './pages/VendorPages/VFeedback';
 import VendorMessDetails from './pages/VendorPages/VMessDetails';
 import VStudentList from './pages/VendorPages/VStudentList';
 import VProfile from './pages/VendorPages/VProfile';
+import VStuHistory from './pages/VendorPages/VStuHistory';
 
 
 import DDashboard from './pages/Department/DDashboard';
@@ -138,6 +139,7 @@ export default function Router() {
         { path: 'liveService', element: <VLiveService /> },
         { path: 'messdetails', element: <VendorMessDetails /> },
         { path: 'history', element: <VHistory /> },
+        { path: 'studentHistory', element: <VStuHistory /> },
         { path: 'menu', element: <VMenu /> },
         { path: 'studentList', element: <VStudentList /> },
         { path: 'profile', element: <VProfile /> },

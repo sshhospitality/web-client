@@ -11,7 +11,7 @@ export default function Profile() {
   const handleOut = async (e) => {
     e.preventDefault();
     const res = await axios.post(
-      `${process.env.REACT_APP_API}/api/auth/logout`,
+      `${process.env.REACT_APP_API}/auth/logout`,
       { xhrFields: { withCredentials: true } },
       { withCredentials: true }
     );

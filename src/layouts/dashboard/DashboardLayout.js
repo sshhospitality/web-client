@@ -43,7 +43,8 @@ export default function DashboardLayout() {
         if(res.data.person === 'Vendor')
           navigate('/vendor/dashboard', {replace: true});
         else if(res.data.person === 'Admin')
-          navigate('/admin/dashboard', {replace: true});
+          navigate('/admin/dashboard', {replace: true});else if(res.data.person === 'Department')
+          navigate('/department/dashboard', {replace: true});
         else if (res.data.person !== 'Student') {
           sessionStorage.clear();
           localStorage.clear();

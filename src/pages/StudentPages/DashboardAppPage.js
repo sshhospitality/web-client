@@ -155,7 +155,7 @@ export default function DashboardAppPage() {
           },
           { withCredentials: true }
         );
-        setMenu(data);
+        setMenu(data[0]["days"]);
         console.log(data)
       } catch (error) {
         console.log(error);
@@ -389,7 +389,7 @@ export default function DashboardAppPage() {
               list={dayWise
                 .map((item, index) => ({
                   // id: item.id,
-                  title: item.meal_items, 
+                  title: item.meal_items.join(', '), 
                   time: item.mealType,
                 }))}
             />

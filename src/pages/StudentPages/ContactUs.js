@@ -103,7 +103,7 @@ export default function ContactUs() {
       Id: id,
       image: null, // Placeholder for the image data
     };
-    if (selectedFile) {
+    if (selectedFile.myFile!=='') {
       /* onst reader = new FileReader();
       reader.readAsDataURL(selectedFile);
       reader.onload = () => {
@@ -115,6 +115,7 @@ export default function ContactUs() {
         console.error('Error encoding file:', error);
       }; */
       requestData.image = selectedFile.myFile;
+      console.log(requestData);
     } else {
       // If no file is selected, make the POST request without the image
       makePostRequest(requestData);

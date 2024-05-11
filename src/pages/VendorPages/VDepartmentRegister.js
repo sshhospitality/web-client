@@ -17,74 +17,6 @@ export default function VDepartmentRegister() {
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
 
-    const handleFile = useCallback((e) => {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-  
-      reader.onload = (e) => {
-        const csv = e.target.result;
-        const rows = csv.split('\n').slice(1); // skip header
-  
-        rows.forEach(row => {
-          const [sNo, name, email, password, did,address,phone] = row.split(',');
-          // Perform validation if needed
-          // Then send data to backend API for each student
-          sendDataToBackend(name, email, password, did,address,phone);
-        });
-        handleCustomAlert('Registration Successful', '', 'success');
-      };
-      
-      reader.onerror = () => {
-        console.error('Error reading file');
-      };
-  
-      reader.readAsText(file);
-    }, []);
-    const sendDataToBackend = useCallback(async (name, email, password, cid,address,phone) => {
-      // You can use fetch API or any other method to send data to your backend API
-      // Example using fetch API:
-      if (
-        name === '' ||
-        did === '' ||
-        email === '' ||
-        password === '' ||
-        address === '' ||
-        phone === ''
-      ) {
-        handleCustomAlert('Empty Field', 'Please fill all the fields', 'danger');
-        return;
-      }
-  
-      if(password.length<5){
-        handleCustomAlert('Password Length Short', 'Please fill a password of atleast 5 characters', 'danger');
-        return;
-      }
-  
-      // if (window.confirm('Confirm the registration?')) {
-        setIsLoading(true);
-        try {
-          const response = await axios.post(
-            `${process.env.REACT_APP_API}/auth/signup`,
-            { email, password, name, person: "Department", did,address,phone },
-            { withCredentials: true }
-          );
-          // if (responce.status === 200) {
-            // handleCustomAlert('Registration Successful', '', 'success');
-          // }
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setIsLoading(false);
-        }
-      // }
-    }, []);
-  // const [messName, setMessName] = useState('');
-  // const [amount, setAmount] = useState('');
-  // const [type, setType] = React.useState('');
-
-  // const handleTypeChange = (event) => {
-  //   setType(event.target.value);
-  // };
   const handleIRegister = async () => {
     if (
       name === '' ||
@@ -216,11 +148,6 @@ export default function VDepartmentRegister() {
             </Button>
           </Grid>
         </Grid>
-        <Typography variant="h4" gutterBottom color={'black'} mb={'1rem'} textAlign={'center'}>
-          Upload CSV File
-        </Typography>
-        <input type="file" accept=".csv" id="file-input" style={{ marginBottom: '1rem' }} onChange={handleFile} />
-        {/* <button onClick={handleFile}>Upload</button> */}
       </Container>
     </div>
   );

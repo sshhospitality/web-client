@@ -42,7 +42,7 @@ export default function VStuHistory() {
   const navigate = useNavigate();
   const [txnTo, setTxnTo] = useState(dayjs());
   const [txnFrom, setTxnFrom] = useState(dayjs().subtract(1, 'week').add(1, 'day'));
-
+  const [totalPages, setTotalPages] = useState(0); // State for total pages
   const [order, setOrder] = useState('asc');
 
   const [selected, setSelected] = useState([]);
@@ -65,6 +65,7 @@ export default function VStuHistory() {
         );
         setTransactions(res.data.transactions);
         setFilteredTransaction(res.data.transactions);
+        setTotalPages(res.data.totalTransactions); // Update totalPages values
         console.log(res.data.transactions);
       } catch (error) {
         console.error('Error fetching transactions:', error);
@@ -115,6 +116,8 @@ export default function VStuHistory() {
         );
         setTransactions(res.data.transactions);
         setFilteredTransaction(res.data.transactions);
+        setTotalPages(res.data.totalTransactions); // Update totalPages value
+
         console.log(transactions);
       } catch (error) {
         if (axios.isCancel(error)) {
@@ -195,7 +198,7 @@ export default function VStuHistory() {
             <TablePagination
               rowsPerPageOptions={[10, 20, 30]}
               component="div"
-              count={transactions.length} // Assuming total count is received from backend
+              count={totalPages}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

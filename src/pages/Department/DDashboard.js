@@ -19,6 +19,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import Swal from 'sweetalert2';
 
 export default function DDashboard() {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ export default function DDashboard() {
     async function fetchData() {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API}/api/verify/details`,
+          `${process.env.REACT_APP_API}/verify/details`,
           { xhrFields: { withCredentials: true } },
           { withCredentials: true }
         );
@@ -94,14 +95,23 @@ export default function DDashboard() {
     // Handle form submission
     try{
       await axios.post(
-        `${process.env.REACT_APP_API}/api/department/department_txn`,
+        `${process.env.REACT_APP_API}/department/department_txn`,
         { date_and_time: value, meal_items: foodItems },
         { withCredentials: true }
       );
       console.log('Submitted food items:', foodItems);
+      Swal.fire({
+        icon: 'success',
+        title: 'Ordered Placed Successfully',
+      });
       handleDialogClose();
     }
     catch(error){
+      Swal.fire({
+        icon: 'error',
+        title: 'Ooops, something went wrong',
+        text: error.text,
+      });
       console.error('Error submitting food items:', error);
     }
   };

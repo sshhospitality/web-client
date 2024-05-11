@@ -50,6 +50,7 @@ export default function VHistory() {
   const [orderBy, setOrderBy] = useState('name');
   const [filteredTransaction, setFilteredTransaction] = useState([]);
   const [filterName, setFilterName] = useState('');
+  const [totalTransactions, setTotalTransactions] = useState(0);
   const { setIsLoading } = useContext(LoadingContext);
   useEffect(() => {
     async function fetchTransactions() {
@@ -65,6 +66,7 @@ export default function VHistory() {
         );
         setTransactions(res.data.transactions);
         setFilteredTransaction(res.data.transactions);
+        setTotalTransactions(res.data.totalDeptTransactions);
         console.log(res.data.transactions);
       } catch (error) {
         console.error('Error fetching transactions:', error);
@@ -136,6 +138,8 @@ export default function VHistory() {
           { withCredentials: true, cancelToken: cancelTokenSourceRef.current.token }
         );
         setTransactions(res.data.transactions);
+        setFilteredTransaction(res.data.transactions);
+        setTotalTransactions(res.data.totalDeptTransactions);
         console.log(transactions);
       } catch (error) {
         if (axios.isCancel(error)) {
@@ -236,7 +240,7 @@ export default function VHistory() {
             <TablePagination
               rowsPerPageOptions={[10, 20, 30]}
               component="div"
-              count={transactions.length} // Assuming total count is received from backend
+              count={totalTransactions}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

@@ -116,6 +116,7 @@ export default function AdminStudentsDetails() {
   const [selectedYear, setSelectedYear] = useState('');
   const [colleges, setColleges] = useState([]);
   const [selectedCollege, setSelectedCollege] = useState('');
+  const [totalStudents,setTotalStudents] = useState(0);
 
   async function studDet() {
     try {

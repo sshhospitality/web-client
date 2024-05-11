@@ -40,7 +40,7 @@ export default function DTransactionHistory() {
   const navigate = useNavigate();
   const [txnTo, setTxnTo] = useState(dayjs());
   const [txnFrom, setTxnFrom] = useState(dayjs().subtract(1, 'week').add(1, 'day'));
-
+  const [totalTransactions,setTotalTransactions] = useState(0);
   const [order, setOrder] = useState('asc');
 
   const [selected, setSelected] = useState([]);
@@ -55,7 +55,7 @@ export default function DTransactionHistory() {
       try {
         console.log(txnFrom);
         const res = await axios.post(
-          `${process.env.REACT_APP_API}/api/department/list_of_dept_txns?page=${page + 1}`,
+          `${process.env.REACT_APP_API}/department/list_of_dept_txns?page=${page + 1}`,
           {
             from: txnFrom,
             to: txnTo,
@@ -63,6 +63,7 @@ export default function DTransactionHistory() {
           { withCredentials: true }
         );
         setTransactions(res.data.transactions);
+        setTotalTransactions(res.data.totalDeptTransactions);
         console.log(res.data);
       } catch (error) {
         console.error('Error fetching transactions:', error);
@@ -141,7 +142,7 @@ export default function DTransactionHistory() {
       setLoader(true);
       try {
         const res = await axios.post(
-          `${process.env.REACT_APP_API}/api/department/list_of_dept_txns?page=${page + 1}`,
+          `${process.env.REACT_APP_API}/department/list_of_dept_txns?page=${page + 1}`,
           {
             from: txnFrom,
             to: txnTo,
@@ -149,6 +150,8 @@ export default function DTransactionHistory() {
           { withCredentials: true, cancelToken: cancelTokenSourceRef.current.token }
         );
         setTransactions(res.data.transactions);
+        setTotalTransactions(res.data.totalDeptTransactions);
+
       } catch (error) {
         if (axios.isCancel(error)) {
           console.log('Request canceled');
@@ -164,30 +167,17 @@ export default function DTransactionHistory() {
   return (
     <>
       <Helmet>
-        <title> Student Transaction Page | Naivedyam Dinning System </title>
+        <title> Department Transaction Page | Naivedyam Dinning System </title>
       </Helmet>
       <Container>
         <Typography margin={'1rem'} marginLeft={'0.5rem'} variant="h2" gutterBottom>
-          Students Transactions
+          My Department Transactions
         </Typography>
         <Typography margin={'1rem'} variant="h5" gutterBottom>
           [Latest Transactions]
         </Typography>
         <Card>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-            {/* <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} /> */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', alignItems: 'center', margin: '0 2rem', gap: '1rem', flexWrap: 'wrap' }}>
-                <TextField
-                  label="Filter by Name"
-                  value={filterName}
-                  // onChange={handleFilterByName} // Attach handleFilterByName to input's onChange event
-                  variant="outlined"
-                  size="small"
-                />
-              </div>
-              {/* Button and other components */}
-            </div>
             <div style={{ display: 'flex', alignItems: 'center', margin: '0 2rem', gap: '1rem', flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
                 <DatePicker
@@ -225,8 +215,6 @@ export default function DTransactionHistory() {
                 <TableRow>
                   <TableCell>Ref No.</TableCell>
                   <TableCell>Timestamp</TableCell>
-                  <TableCell>From</TableCell>
-                  <TableCell>To</TableCell>
                   <TableCell>Date&Time</TableCell>
                   <TableCell>Meal Items</TableCell>
                 </TableRow>
@@ -236,8 +224,6 @@ export default function DTransactionHistory() {
                   <TableRow key={transaction._id}>
                     <TableCell>{transaction.transaction_ref_no}</TableCell>
                     <TableCell>{transaction.timestamp}</TableCell>
-                    <TableCell>{transaction.account_from}</TableCell>
-                    <TableCell>{transaction.account_to}</TableCell>
                     <TableCell>{dayjs.utc(transaction.date_and_time).tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss')}</TableCell>
                     <TableCell>
                       {transaction.meal_items.map((item, index) => (
@@ -251,7 +237,7 @@ export default function DTransactionHistory() {
             <TablePagination
               rowsPerPageOptions={[10, 20, 30]}
               component="div"
-              count={transactions.length} // Assuming total count is received from backend
+              count={totalTransactions} // Assuming total count is received from backend
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

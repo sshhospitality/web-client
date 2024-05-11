@@ -6,18 +6,18 @@ import Typography from '@mui/material/Typography';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
 
+
 export default function DProfile() {
   const navigate = useNavigate();
   const handleOut = async (e) => {
     e.preventDefault();
     const res = await axios.post(
-      `${process.env.REACT_APP_API}/api/auth/logout`,
+      `${process.env.REACT_APP_API}/auth/logout`,
       { xhrFields: { withCredentials: true } },
       { withCredentials: true }
     );
-    if (res.status(200)) {
+    if (res.status===(200)) {
       console.log('logged out');
-
 
       localStorage.clear();
       sessionStorage.clear();

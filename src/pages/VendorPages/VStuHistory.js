@@ -113,6 +113,7 @@ export default function VStuHistory() {
           { withCredentials: true, cancelToken: cancelTokenSourceRef.current.token }
         );
         setTransactions(res.data.transactions);
+        setFilteredTransaction(res.data.transactions);
         console.log(transactions);
       } catch (error) {
         if (axios.isCancel(error)) {

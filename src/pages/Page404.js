@@ -22,7 +22,7 @@ export default function Page404() {
   return (
     <>
       <Helmet>
-        <title> 404 Page Not Found | IIT Bhilai Dinning System </title>
+        <title> 404 Page Not Found | Naivedyam Mess System </title>
       </Helmet>
 
       <Container>

@@ -92,7 +92,7 @@ export default function DashboardAppPage() {
           { withCredentials: true }
         );
         const chartDetails = response.data.mealTypeCountsByMonth;
-        console.log(chartDetails[0].mealTypeCounts);
+        console.log(chartDetails);
     
         const formattedChartData = chartDetails[0].mealTypeCounts.map((item) => ({
           label: item.mealType,

@@ -30,6 +30,7 @@ import {
   IconButton,
   TableContainer,
   TablePagination,
+  FormControl, InputLabel,
 } from '@mui/material';
 // components
 import Label from '../../components/label';
@@ -186,7 +187,7 @@ export default function AdminStudentsDetails() {
   const users = filteredStudents.map((num, index) => ({
     id: num.studentDetails._id,
     stud: num.studentDetails.name,
-    college:num.collegeName,
+    college: num.collegeName,
     userId: num.studentDetails.userId,
     department: num.studentDetails.department,
     year: num.studentDetails.year,
@@ -314,7 +315,7 @@ export default function AdminStudentsDetails() {
     doc.setFontSize(15);
 
     const title = 'Student List';
-    const headers = [['Name', 'College','Id', 'Year', 'Department', 'Phone', 'Enrolled']];
+    const headers = [['Name', 'College', 'Id', 'Year', 'Department', 'Phone', 'Enrolled']];
 
     const data = stud.map((student) => [
       student.studentDetails.name,
@@ -415,7 +416,7 @@ export default function AdminStudentsDetails() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, stud, userId,college, department, year, phone, isEnrolled } = row;
+                    const { id, stud, userId, college, department, year, phone, isEnrolled } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox">
@@ -580,14 +581,20 @@ export default function AdminStudentsDetails() {
             onChange={handleInputChange}
           />
 
-          <Checkbox
-            checked={editedDetails.isEnabled || selected?.isEnrolled || false}
-            onChange={handleInputChange}
-            id="isEnabled"
-            name="isEnabled"
-            inputProps={{ 'aria-label': 'is enabled checkbox' }}
-          />
-          {/* Add additional TextField components for other fields */}
+          <FormControl fullWidth margin="dense">
+            <InputLabel id="is-enrolled-label">Is Enrolled</InputLabel>
+            <Select
+              value={editedDetails.isEnrolled} // Use editedDetails.isEnrolled directly
+              onChange={(event) => setEditedDetails({ ...editedDetails, isEnrolled: event.target.value === true })} // Update isEnrolled directly
+              fullWidth
+              margin="dense"
+              id="isEnrolled"
+              label="Is Enrolled"
+            >
+              <MenuItem value={true}>True</MenuItem>
+              <MenuItem value={false}>False</MenuItem>
+            </Select>
+          </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose}>Cancel</Button>

@@ -30,6 +30,7 @@ import {
   IconButton,
   TableContainer,
   TablePagination,
+  FormControl, InputLabel,
 } from '@mui/material';
 // components
 import Label from '../../components/label';
@@ -204,30 +205,23 @@ export default function UserPage() {
   };
 
   const handleInputChange = (event) => {
-    const { name, value, checked } = event.target;
-    if (name === 'isEnabled') {
-      // Update the state with the new value
-      setEditedDetails((prevState) => ({
-        ...prevState,
-        [name]: checked,
-      }));
-    } else {
-      setEditedDetails({
-        ...editedDetails,
-        [name]: value,
-      });
-    }
+    const { name, value } = event.target;
+    setEditedDetails({
+      ...editedDetails,
+      [name]: value,
+    });
   };
 
   const handleSaveChanges = async () => {
     try {
       // Call your PUT request to update the user details
-      console.log(editedDetails);
+      console.log('final', editedDetails);
       await axios.post(`${process.env.REACT_APP_API}/stud/updateprofile/${selected.id}`, editedDetails, {
         withCredentials: true,
       });
       // Close the dialog after successful update
       setIsEditDialogOpen(false);
+      handleCloseMenu();
       studDet();
       // Optionally, you may want to refetch the user list to reflect the changes immediately
     } catch (error) {
@@ -559,15 +553,20 @@ export default function UserPage() {
             value={editedDetails.phone || selected?.phone || ''}
             onChange={handleInputChange}
           />
-
-          <Checkbox
-            checked={editedDetails.isEnabled || selected?.isEnrolled || false}
-            onChange={handleInputChange}
-            id="isEnabled"
-            name="isEnabled"
-            inputProps={{ 'aria-label': 'is enabled checkbox' }}
-          />
-          {/* Add additional TextField components for other fields */}
+          <FormControl fullWidth margin="dense">
+            <InputLabel id="is-enrolled-label">Is Enrolled</InputLabel>
+            <Select
+              value={editedDetails.isEnrolled} // Use editedDetails.isEnrolled directly
+              onChange={(event) => setEditedDetails({ ...editedDetails, isEnrolled: event.target.value === true })} // Update isEnrolled directly
+              fullWidth
+              margin="dense"
+              id="isEnrolled"
+              label="Is Enrolled"
+            >
+              <MenuItem value={true}>True</MenuItem>
+              <MenuItem value={false}>False</MenuItem>
+            </Select>
+          </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose}>Cancel</Button>

@@ -15,7 +15,7 @@ export default function Profile() {
       { xhrFields: { withCredentials: true } },
       { withCredentials: true }
     );
-    if (res.status(200)) {
+    if (res.status===(200)) {
       console.log('logged out');
 
       localStorage.clear();

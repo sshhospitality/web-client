@@ -117,12 +117,28 @@ export default function AdminStudentsDetails() {
   const [colleges, setColleges] = useState([]);
   const [selectedCollege, setSelectedCollege] = useState('');
   const [totalStudents,setTotalStudents] = useState(0);
+  const [page, setPage] = useState(0);
+  const [open, setOpen] = useState(null);
+  co
+
+  const [order, setOrder] = useState('asc');
+
+  const [selected, setSelected] = useState([]);
+
+  const [orderBy, setOrderBy] = useState('name');
+
+  const [filterName, setFilterName] = useState('');
+
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editedDetails, setEditedDetails] = useState({});
 
   async function studDet() {
     try {
-      const res = await axios.post('http://localhost:5000/api/admin/students', {}, { withCredentials: true });
+      const res = await axios.post(`${process.env.REACT_APP_API}/admin/students?page=${page + 1}`, {}, { withCredentials: true });
       setStud(res.data.students);
       console.log(res.data);
+      setTotalStudents(res.data.totalStudents)
       const allCollege = [...new Set(res.data.students.map((student) => student.collegeName))];
       setColleges(allCollege);
       const allDepartments = [...new Set(res.data.students.map((student) => student.studentDetails.department))];
@@ -141,24 +157,10 @@ export default function AdminStudentsDetails() {
     //   setFirstVisitH(false);
     //   sessionStorage.setItem('hasVisitedPageH', 'true');
     // }
-  }, []);
+  }, [page]);
   // console.log(USERLIST)
 
-  const [open, setOpen] = useState(null);
 
-  const [page, setPage] = useState(0);
-
-  const [order, setOrder] = useState('asc');
-
-  const [selected, setSelected] = useState([]);
-
-  const [orderBy, setOrderBy] = useState('name');
-
-  const [filterName, setFilterName] = useState('');
-
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [editedDetails, setEditedDetails] = useState({});
 
   const handleOpenMenu = (event, row) => {
     setSelected(row);
@@ -485,7 +487,7 @@ export default function AdminStudentsDetails() {
           <TablePagination
             rowsPerPageOptions={[10, 20, 30]}
             component="div"
-            count={users.length}
+            count={totalStudents}
             // count={"10"}
             rowsPerPage={rowsPerPage}
             page={page}

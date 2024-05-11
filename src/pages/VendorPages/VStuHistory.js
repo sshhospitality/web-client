@@ -198,7 +198,7 @@ export default function VStuHistory() {
             <TablePagination
               rowsPerPageOptions={[10, 20, 30]}
               component="div"
-              count={totalPages}
+              // count={totalPages}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

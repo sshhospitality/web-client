@@ -44,7 +44,7 @@ export default function DashboardAppPage() {
     async function fetchData() {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API}/api/verify/details`,
+          `${process.env.REACT_APP_API}/verify/details`,
           { xhrfields: { withCredentials: true } },
           {
             withCredentials: true,
@@ -75,7 +75,7 @@ export default function DashboardAppPage() {
     async function fetchChartData() {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API}/api/verify/chartdetails`,
+          `${process.env.REACT_APP_API}/verify/chartdetails`,
           { xhrFields: { withCredentials: true } },
           { withCredentials: true }
         );
@@ -135,7 +135,7 @@ export default function DashboardAppPage() {
     async function fetchDayWiseData() {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API}/api/verify/mealtimeline`,
+          `${process.env.REACT_APP_API}/verify/mealtimeline`,
           { xhrFields: { withCredentials: true } },
           { withCredentials: true }
         );
@@ -198,7 +198,7 @@ export default function DashboardAppPage() {
     async function getMenu(){
       try {
         const { data } = await axios.post(
-          `${process.env.REACT_APP_API}/api/menu/list`,
+          `${process.env.REACT_APP_API}/menu/list`,
           {
             xhrFeilds: {
               withCredentials: true,
@@ -230,7 +230,7 @@ export default function DashboardAppPage() {
     } else if (diffInDates <= 31) {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API}/api/admin/basic/trnx`,
+          `${process.env.REACT_APP_API}/admin/basic/trnx`,
           {
             from: basicFrom,
             to: basicTo,
@@ -273,7 +273,7 @@ export default function DashboardAppPage() {
     } else if (diffInDate <= 31) {
       try {
         const response = await axios.post(
-          `http://localhost:5000/api/admin/addon/trnx`,
+          `${process.env.REACT_APP_API}/admin/addon/trnx`,
           {
             from: addOnFrom,
             to: addOnTo,
@@ -425,9 +425,6 @@ export default function DashboardAppPage() {
               ]}
               sx={{ height: '100%' }}
             />
-          </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <AppNewsUpdate title="Today's Menu" list={transformedData} />
           </Grid>
         </Grid>
 

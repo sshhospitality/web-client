@@ -119,7 +119,6 @@ export default function AdminStudentsDetails() {
   const [totalStudents,setTotalStudents] = useState(0);
   const [page, setPage] = useState(0);
   const [open, setOpen] = useState(null);
-  co
 
   const [order, setOrder] = useState('asc');
 
@@ -229,7 +228,7 @@ export default function AdminStudentsDetails() {
     try {
       // Call your PUT request to update the user details
       console.log(editedDetails);
-      await axios.post(`http://localhost:5000/api/stud/updateprofile/${selected.id}`, editedDetails, {
+      await axios.post(`${process.env.REACT_APP_API}/stud/updateprofile/${selected.id}`, editedDetails, {
         withCredentials: true,
       });
       // Close the dialog after successful update
@@ -296,7 +295,7 @@ export default function AdminStudentsDetails() {
     try {
       // Call your DELETE request to delete the user
       console.log(selected.id);
-      axios.delete(`http://localhost:5000/api/stud/deletestud/${selected.id}`, { withCredentials: true });
+      axios.delete(`${process.env.REACT_APP_API}/stud/deletestud/${selected.id}`, { withCredentials: true });
       // Close the dialog after successful deletion
       handleCloseMenu();
       studDet();

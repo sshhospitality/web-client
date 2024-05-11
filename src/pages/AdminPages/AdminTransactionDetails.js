@@ -79,7 +79,7 @@ export default function AdminTransactionDetails() {
     async function fetchTransactions() {
       try {
         const res = await axios.post(
-          `http://localhost:5000/api/txn/history?page=${page + 1}`,
+          `${process.env.REACT_APP_API}/txn/history?page=${page + 1}`,
           {
             from: txnFrom,
             to: txnTo,
@@ -163,7 +163,7 @@ export default function AdminTransactionDetails() {
       setLoader(true);
       try {
         const res = await axios.post(
-          `http://localhost:5000/api/admin/transactions?page=${page + 1}`,
+          `${process.env.REACT_APP_API}/admin/transactions?page=${page + 1}`,
           {
             // mess: 'mess-galav',
             from: txnFrom,

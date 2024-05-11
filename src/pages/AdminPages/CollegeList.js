@@ -104,7 +104,7 @@ export default function CollegeList() {
 
   async function collegeDet() {
     try {
-      const res = await axios.get('http://localhost:5000/api/admin/college_get',{ withCredentials: true });
+      const res = await axios.get(`${process.env.REACT_APP_API}/admin/college_get`,{ withCredentials: true });
       setCollege(res.data);
     } catch (error) {
       console.log('Error fetching colleges');
@@ -175,7 +175,7 @@ export default function CollegeList() {
     try {
       // Call your PUT request to update the user details
       console.log(editedDetails);
-      await axios.post(`http://localhost:5000/api/college/college_update/${selected.id}`, editedDetails, {
+      await axios.post(`${process.env.REACT_APP_API}/college/college_update/${selected.id}`, editedDetails, {
         withCredentials: true,
       });
       // Close the dialog after successful update
@@ -221,7 +221,7 @@ export default function CollegeList() {
     try {
       // Call your DELETE request to delete the user
       console.log(selected.id);
-      axios.delete(`http://localhost:5000/api/college/college_del/${selected.id}`, { withCredentials: true });
+      axios.delete(`${process.env.REACT_APP_API}/college/college_del/${selected.id}`, { withCredentials: true });
       // Close the dialog after successful deletion
       handleCloseMenu();
       collegeDet();

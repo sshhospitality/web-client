@@ -12,6 +12,7 @@ import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+
 // @mui
 import {
   Card,
@@ -109,6 +110,7 @@ export default function VFeedback() {
     try {
       const res = await axios.post(`${process.env.REACT_APP_API}/feedback/feedback_get`, {}, { withCredentials: true });
       setFeedback(res.data);
+      console.log(res.data);
       const allRatings = [...new Set(res.data.map((feedback) => feedback.rating))];
       setRatings(allRatings);
     } catch (error) {
@@ -154,6 +156,7 @@ export default function VFeedback() {
     rating: num.rating,
     message: num.message,
     email: num.email,
+    image: num.image,
   }));
 
   const handleChangePage = (event, newPage) => {
@@ -174,6 +177,22 @@ export default function VFeedback() {
   const filteredfeedbacks = applySortFilter(users, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredfeedbacks.length && !!filterName;
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+
+  // Function to handle opening the dialog box and setting the selected image
+  const handleOpenDialog = (image) => {
+    setSelectedImage(image.toString('base64'));
+    setOpenDialog(true);
+    console.log(image);
+    console.log(selectedImage.toString('base64'));
+  };
+
+  // Function to handle closing the dialog box
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedImage('');
+  };
 
   return (
     <>
@@ -216,7 +235,7 @@ export default function VFeedback() {
                 />
                 <TableBody>
                   {filteredfeedbacks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, userId, rating, message, email } = row;
+                    const { id, name, userId, rating, message, email, image } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox">
@@ -237,6 +256,9 @@ export default function VFeedback() {
                         <TableCell align="left">{rating}</TableCell>
                         <TableCell align="left">{message}</TableCell>
                         <TableCell align="left">{email}</TableCell>
+                        <TableCell align="left">
+                          {image && <Button onClick={() => handleOpenDialog(image)}>View Image</Button>}
+                        </TableCell>
                       </TableRow>
                     );
                   })}
@@ -278,12 +300,22 @@ export default function VFeedback() {
             rowsPerPageOptions={[10, 20, 30]}
             component="div"
             count={users.length}
-            // count={"10"}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
+          <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <DialogTitle>Image</DialogTitle>
+            <DialogContent>
+              {selectedImage && (
+                <img src={`data:image/png;base64,${selectedImage}`} alt="Selected" style={{ width: '100%' }} />
+              )}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialog}>Close</Button>
+            </DialogActions>
+          </Dialog>
         </Card>
       </Container>
     </>

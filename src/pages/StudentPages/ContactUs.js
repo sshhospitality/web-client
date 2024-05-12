@@ -99,7 +99,6 @@ export default function ContactUs() {
       name: name,
       userId: userId,
       message: e.target.message.value,
-      cid: collegeId,
       Id: id,
       image: null, // Placeholder for the image data
     };

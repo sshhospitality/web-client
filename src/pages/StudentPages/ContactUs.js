@@ -115,6 +115,7 @@ export default function ContactUs() {
       }; */
       requestData.image = selectedFile.myFile;
       console.log(requestData);
+      makePostRequest(requestData);
     } else {
       // If no file is selected, make the POST request without the image
       makePostRequest(requestData);
@@ -388,3 +389,4 @@ export default function ContactUs() {
     </>
   );
 }
+

@@ -236,7 +236,6 @@ export default function VFeedback() {
                 <TableBody>
                   {filteredfeedbacks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     const { id, name, userId, rating, message, email, image } = row;
-
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox">
                         <TableCell padding="checkbox">

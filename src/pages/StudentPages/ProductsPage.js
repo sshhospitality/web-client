@@ -51,7 +51,7 @@ export default function ProductsPage() {
   return (
     <>
       <Helmet>
-        <title>Menu Page | Naivedyam Dinning System</title>
+        <title>Menu Page | Digimess Dinning System</title>
       </Helmet>
 
       <Container>

@@ -176,7 +176,7 @@ export default function VMenu() {
   return (
     <>
       <Helmet>
-        <title> Mess Details | Naivedyam Dining System </title>
+        <title> Mess Details | Digimess Dining System </title>
       </Helmet>
 
       <Container>

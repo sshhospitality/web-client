@@ -119,7 +119,7 @@ export default function DDashboard() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | Naivedyam Dining Page </title>
+        <title> Dashboard | Digimess Dining Page </title>
       </Helmet>
 
       <Container maxWidth="xl">

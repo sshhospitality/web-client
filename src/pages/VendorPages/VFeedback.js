@@ -195,7 +195,7 @@ export default function VFeedback() {
   return (
     <>
       <Helmet>
-        <title> Feedback Lists | Naivedyam Dinning System </title>
+        <title> Feedback Lists | Digimess Dinning System </title>
       </Helmet>
 
       <Container>

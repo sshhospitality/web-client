@@ -51,7 +51,7 @@ export default function LoginPage() {
   return (
     <div>
       <Helmet>
-        <title> Login | Naivedyam Dining System </title>
+        <title> Login | Digimess Dining System </title>
       </Helmet>
 
       <StyledRoot>
@@ -68,7 +68,7 @@ export default function LoginPage() {
               }}
             >
               <Typography variant="h3" sx={{ px: 5, mt: 6, mb: 0, color: 'white', textAlign: 'center', textShadow: '0px 0px 1px white'}}>
-                Welcome to Naivedyam Mess System
+                Welcome to DIGIMESS Mess System
               </Typography>
               <div style={{ marginTop: '0px', padding: '50px' }}>
                 <img src="/assets/LOGO.png" alt="login" style={{ borderRadius: '5%', height: '320px' }} />
@@ -91,7 +91,7 @@ export default function LoginPage() {
               }
             />
             <Typography variant="h4" gutterBottom>
-              Sign in to Naivedyam
+              Sign in to Digimess
             </Typography>
 
             <Typography variant="body2" sx={{ mb: 5 }}>

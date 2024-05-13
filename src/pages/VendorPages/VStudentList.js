@@ -329,7 +329,7 @@ export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title> Student List Page | Naivedyam Dinning System </title>
+        <title> Student List Page | Digimess Dinning System </title>
       </Helmet>
 
       <Container>

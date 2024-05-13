@@ -33,7 +33,7 @@ export default function DProfile() {
   return (
     <>
       <Helmet>
-        <title> Profile Page | Naivedyam Dinning System </title>
+        <title> Profile Page | Digimess Dinning System </title>
       </Helmet>
       <Typography component="h1" variant="h1" mt="0px" mb="30px" align="center" color="#333c3c">
         My Profile

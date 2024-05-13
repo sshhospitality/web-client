@@ -156,7 +156,7 @@ export default function VHistory() {
   return (
     <>
       <Helmet>
-        <title> Department Transaction Page | Naivedyam Dinning System </title>
+        <title> Department Transaction Page | Digimess Dinning System </title>
       </Helmet>
       <Container>
         <Typography margin={'1rem'} marginLeft={'0.5rem'} variant="h2" gutterBottom>

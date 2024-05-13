@@ -266,7 +266,7 @@ export default function VDepartmentList() {
   return (
     <>
       <Helmet>
-        <title> Department List Page | Naivedyam Dinning System </title>
+        <title> Department List Page | Digimess Dinning System </title>
       </Helmet>
 
       <Container>

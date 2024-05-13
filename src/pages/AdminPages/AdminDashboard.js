@@ -325,7 +325,7 @@ export default function DashboardAppPage() {
   return (
     <>
       <Helmet>
-        <title> Admin Dashboard | Naivedyam Dining Page </title>
+        <title> Admin Dashboard | Digimess Dining Page </title>
       </Helmet>
 
       <Container maxWidth="xl">

@@ -266,7 +266,7 @@ export default function CollegeList() {
   return (
     <>
       <Helmet>
-        <title> College List Page | Naivedyam Dinning System </title>
+        <title> College List Page | Digimess Dinning System </title>
       </Helmet>
 
       <Container>

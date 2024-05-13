@@ -103,7 +103,7 @@ export default function VendorMessDetails() {
   return (
     <>
       <Helmet>
-        <title>Mess Committee Details | Naivedyam Dining System</title>
+        <title>Mess Committee Details | Digimess Dining System</title>
       </Helmet>
 
       <Container>

@@ -46,7 +46,7 @@ export default function VProfile() {
   return (
     <>
       <Helmet>
-        <title> Profile Page | Naivedyam Dinning System </title>
+        <title> Profile Page | Digimess Dinning System </title>
       </Helmet>
       <section style={{ backgroundColor: '' }}>
         <MDBContainer className="py-5">

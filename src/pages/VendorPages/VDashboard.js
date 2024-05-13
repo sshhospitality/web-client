@@ -241,7 +241,7 @@ export default function VDashboard() {
   return (
     <>
       <Helmet>
-        <title> Vendor Dashboard | Naivedyam Dinning System </title>
+        <title> Vendor Dashboard | Digimess Dinning System </title>
       </Helmet>
 
       <Container maxWidth="xl">

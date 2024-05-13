@@ -234,7 +234,6 @@ export default function VFeedback() {
                 <TableBody>
                   {filteredfeedbacks.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     const { id, name, userId, rating, message, email, image } = row;
-                    const imageData = image ? `data:image/png;base64,${image.toString('base64')}` : '';
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox">
                         <TableCell padding="checkbox">
@@ -255,7 +254,7 @@ export default function VFeedback() {
                         <TableCell align="left">{message}</TableCell>
                         <TableCell align="left">{email}</TableCell>
                         <TableCell align="left">
-                          {image && <Button onClick={() => handleOpenDialog(imageData)}>View Image</Button>}
+                          {image && <Button onClick={() => handleOpenDialog(image)}>View Image</Button>}
                         </TableCell>
                       </TableRow>
                     );

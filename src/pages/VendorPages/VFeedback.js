@@ -182,8 +182,10 @@ export default function VFeedback() {
 
   // Function to handle opening the dialog box and setting the selected image
   const handleOpenDialog = (image) => {
-    setSelectedImage(image);
+    setSelectedImage(image.toString('base64'));
     setOpenDialog(true);
+    console.log(image);
+    console.log(selectedImage.toString('base64'));
   };
 
   // Function to handle closing the dialog box
@@ -303,15 +305,16 @@ export default function VFeedback() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
           <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogTitle>Image</DialogTitle>
-          <DialogContent>
-          <img src={selectedImage} alt="Selected" style={{ width: '100%' }} />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog}>Close</Button>
-          </DialogActions>
-        </Dialog>
-
+            <DialogTitle>Image</DialogTitle>
+            <DialogContent>
+              {selectedImage && (
+                <img src={`data:image/png;base64,${selectedImage}`} alt="Selected" style={{ width: '100%' }} />
+              )}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialog}>Close</Button>
+            </DialogActions>
+          </Dialog>
         </Card>
       </Container>
     </>

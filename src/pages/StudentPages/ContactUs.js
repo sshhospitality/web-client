@@ -12,6 +12,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Form } from 'semantic-ui-react';
 import Swal from 'sweetalert2';
+import { format } from 'date-fns';
 
 // Service details for sending emails
 const SERVICE_ID = 'service_3k0ua7g';
@@ -144,10 +145,21 @@ export default function ContactUs() {
     e.target.reset();
   };
   const makePostRequest = async (requestData) => {
+    const formData = new FormData();
+    formData.append("name", requestData.name);
+    formData.append("userId", requestData.userId);
+    formData.append("email", requestData.email);
+    formData.append("message", requestData.message);
+    formData.append("cid", requestData.cid);
+    formData.append("Id", requestData.Id);
+    formData.append("rating", requestData.rating);
+    if(requestData.image!=null){
+      formData.append("image", requestData.image);
+    }
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API}/feedback/feedback_post`, requestData, {
+      const response = await axios.post(`${process.env.REACT_APP_API}/feedback/feedback_post`, formData, {
         headers: {
-          'Content-Type': 'application/json', // Set the content type to JSON
+          'Content-Type': "multipart/form-data", // Set the content type to JSON
         },
         withCredentials: true,
       });
@@ -189,8 +201,7 @@ export default function ContactUs() {
   }; */
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    const base64 = await convertToBase64(file);
-    setSelectedFile({ ...selectedFile, myFile: base64 });
+    setSelectedFile({ ...selectedFile, myFile: file });
   };
 
   // State variable for controlling active tab

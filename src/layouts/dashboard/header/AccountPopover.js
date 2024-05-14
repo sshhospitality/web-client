@@ -32,12 +32,20 @@ export default function AccountPopover() {
   };
 
   const navigate = useNavigate();
+ 
   const handleOut = async (e) => {
     e.preventDefault();
-    const res = await axios.post('http://localhost:5000/api/auth/logout', {xhrFields:{withCredentials: true}},{withCredentials: true});
-    localStorage.clear();
-    sessionStorage.clear();
-    navigate('/login', { replace: true });
+    try {
+      await axios.post(`${process.env.REACT_APP_API}/auth/logout`, {}, {
+        withCredentials: true
+      });
+      localStorage.clear();
+      sessionStorage.clear();
+      navigate('/login', { replace: true });
+    } catch (error) {
+      console.error('Logout failed', error);
+      // Handle error appropriately, possibly show a message to the user
+    }
   };
   const handleClose = () => {
     setOpen(null);

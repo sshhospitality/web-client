@@ -8,19 +8,19 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
   const navigate = useNavigate();
+  
   const handleOut = async (e) => {
     e.preventDefault();
-    const res = await axios.post(
-      `${process.env.REACT_APP_API}/auth/logout`,
-      { xhrFields: { withCredentials: true } },
-      { withCredentials: true }
-    );
-    if (res.status===(200)) {
-      console.log('logged out');
-
+    try {
+      await axios.post(`${process.env.REACT_APP_API}/auth/logout`, {}, {
+        withCredentials: true
+      });
       localStorage.clear();
       sessionStorage.clear();
       navigate('/login', { replace: true });
+    } catch (error) {
+      console.error('Logout failed', error);
+      // Handle error appropriately, possibly show a message to the user
     }
   };
   const name = localStorage.getItem('name');

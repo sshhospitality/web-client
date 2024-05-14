@@ -5,6 +5,7 @@ import axios from 'axios';
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
 // mocks_
+import { useCookies } from 'react-cookie';
 // import account from '../../../_mock/account';
 
 // ----------------------------------------------------------------------
@@ -30,6 +31,7 @@ export default function AccountPopover() {
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
+  const [cookies, setCookie, removeCookie] = useCookies();
 
   const navigate = useNavigate();
  
@@ -41,6 +43,7 @@ export default function AccountPopover() {
       });
       localStorage.clear();
       sessionStorage.clear();
+      removeCookie('token');
       navigate('/login', { replace: true });
     } catch (error) {
       console.error('Logout failed', error);

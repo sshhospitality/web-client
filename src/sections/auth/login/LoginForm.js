@@ -57,8 +57,6 @@ export default function LoginForm() {
         { email, password },
         { withCredentials: true }
       );
-      console.log(`${process.env.REACT_APP_API}`)
-      console.log(response.data);
       localStorage.setItem('person', response.data.person);
       localStorage.setItem('email', email);
 

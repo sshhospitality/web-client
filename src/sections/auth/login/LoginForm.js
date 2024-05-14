@@ -60,7 +60,7 @@ export default function LoginForm() {
       console.log(`${process.env.REACT_APP_API}`)
       console.log(response.data);
       localStorage.setItem('person', response.data.person);
-      localStorage.setItem('email', response.data.email);
+      localStorage.setItem('email', email);
 
       if (response.data.person === 'Student') navigate('/dashboard/app', { replace: true });
       else if (response.data.person === 'College') navigate('/vendor/dashboard', { replace: true });

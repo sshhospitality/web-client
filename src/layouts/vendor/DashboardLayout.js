@@ -35,34 +35,7 @@ const Main = styled('div')(({ theme }) => ({
 
 export default function DashboardLayout() {
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
-  useEffect(() => {
-    async function validation() {
-      try {
-        const res = await axios.post(`${process.env.REACT_APP_API}/verify/person`, { xhrFields: { withCredentials: true } }, { withCredentials: true });
-        // console.log(res);
-        if(res.data.person === 'Student')
-          navigate('/dashboard/app', {replace: true});
-        else if(res.data.person === 'Admin')
-          navigate('/admin/dashboard', {replace: true});
-         else if(res.data.person === 'Department')
-          navigate('/admin/dashboard', {replace: true});
-        else if (res.data.person !== 'College') {
-          sessionStorage.clear();
-          localStorage.clear();
-          navigate('/login', { replace: true });
-        }
-
-      }
-      catch (error) {
-        console.log(error);
-        sessionStorage.clear();
-        localStorage.clear();
-        navigate('/login', { replace: true });
-      }
-    }
-    validation();
-  }, [navigate]);
+  
 
   return (
     <StyledRoot>

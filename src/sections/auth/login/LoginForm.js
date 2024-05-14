@@ -52,12 +52,12 @@ export default function LoginForm() {
       return;
     }
     try {
-      console.log(`${process.env.REACT_APP_API}`)
       const response = await axios.post(
         `${process.env.REACT_APP_API}/auth/login`,
         { email, password },
         { withCredentials: true }
       );
+      console.log(`${process.env.REACT_APP_API}`)
       console.log(response.data);
       localStorage.setItem('person', response.data.person);
       localStorage.setItem('email', response.data.email);

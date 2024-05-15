@@ -308,7 +308,7 @@ export default function VFeedback() {
             <DialogTitle>Image</DialogTitle>
             <DialogContent>
               {selectedImage && (
-                <img src={`data:image/png;base64,${selectedImage}`} alt="Selected" style={{ width: '100%' }} />
+                <img src={`${selectedImage}`} alt="Selected" style={{ width: '100%' }} />
               )}
             </DialogContent>
             <DialogActions>

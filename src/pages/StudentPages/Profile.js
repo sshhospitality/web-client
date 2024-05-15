@@ -24,7 +24,9 @@ export default function Profile() {
     }
   };
   const name = localStorage.getItem('name');
-  const email = localStorage.getItem('email');
+  const person = localStorage.getItem('person');
+  const email = localStorage.getItem('Email');
+  console.log(email,person)
   const id = localStorage.getItem('id');
   const department = localStorage.getItem('department');
   const year = localStorage.getItem('year');

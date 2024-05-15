@@ -46,7 +46,7 @@ export default function AccountPopover() {
     setOpen(null);
   };
 
-  const email = localStorage.getItem('email');
+  const email = localStorage.getItem('Email');
   return (
     <>
       <IconButton

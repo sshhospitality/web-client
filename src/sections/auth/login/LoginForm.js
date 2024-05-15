@@ -57,8 +57,8 @@ export default function LoginForm() {
         { email, password },
         { withCredentials: true }
       );
-      localStorage.setItem('person', response.data.person);
-      localStorage.setItem('email', email);
+      localStorage.setItem('person', response.data.user.person);
+      localStorage.setItem('Email', response.data.user.email);
 
       if (response.data.person === 'Student') navigate('/dashboard/app', { replace: true });
       else if (response.data.person === 'College') navigate('/vendor/dashboard', { replace: true });

@@ -44,7 +44,7 @@ export default function VDashboard() {
   async function fetchData() {
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/verify/details',
+        `${process.env.REACT_APP_API}/verify/details`,
         {
           xhrFields: { withCredentials: true },
         },
@@ -79,7 +79,7 @@ export default function VDashboard() {
   async function fetchDayWiseData() {
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/verify/mealtimeline`,
+        `${process.env.REACT_APP_API}/verify/mealtimeline`,
         { xhrFields: { withCredentials: true } },
         { withCredentials: true }
       );
@@ -196,7 +196,7 @@ export default function VDashboard() {
   async function getMenu(){
     try {
       const { data } = await axios.post(
-        `http://localhost:5000/api/menu/list`,
+        `${process.env.REACT_APP_API}/menu/list`,
         {
           xhrFeilds: {
             withCredentials: true,

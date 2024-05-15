@@ -39,7 +39,7 @@ export default function VProfile() {
     }
   };
   const name = localStorage.getItem('name');
-  const email = localStorage.getItem('email');
+  const email = localStorage.getItem('Email');
   const cid = localStorage.getItem('cid');
   const phone = localStorage.getItem('phone');
   const address = localStorage.getItem('address');

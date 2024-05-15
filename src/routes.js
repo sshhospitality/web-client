@@ -16,7 +16,6 @@ import ProductsPage from './pages/StudentPages/ProductsPage';
 import DashboardAppPage from './pages/StudentPages/DashboardAppPage';
 
 import VDashboard from './pages/VendorPages/VDashboard';
-import VLiveService from './pages/VendorPages/VLiveService';
 import VHistory from './pages/VendorPages/VHistory';
 import VMenu from './pages/VendorPages/VMenu';
 import VDepartmentRegister from './pages/VendorPages/VDepartmentRegister';
@@ -136,7 +135,6 @@ export default function Router() {
         { path: 'departmentRegister', element: <VDepartmentRegister /> },
         { path: 'departmentList', element: <VDepartmentList /> },
         { path: 'feedback', element: <VFeedback /> },
-        { path: 'liveService', element: <VLiveService /> },
         { path: 'messdetails', element: <VendorMessDetails /> },
         { path: 'history', element: <VHistory /> },
         { path: 'studentHistory', element: <VStuHistory /> },

@@ -26,7 +26,7 @@ export default function DProfile() {
   };
 
   const name = localStorage.getItem('name');
-  const email = localStorage.getItem('email');
+  const email = localStorage.getItem('Email');
   const id = localStorage.getItem('departmentId');
   const phone = localStorage.getItem('phone');
   const college = localStorage.getItem('collegeName');

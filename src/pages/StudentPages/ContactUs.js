@@ -61,8 +61,6 @@ export default function ContactUs() {
   const userId = localStorage.getItem('id');
   const email = localStorage.getItem('Email');
   const name = localStorage.getItem('name');
-  const collegeId = localStorage.getItem('collegeId');
-  const id = localStorage.getItem('userId');
   // State variables for storing mess details, selected rating, and uploaded image
   const [messDetails, setMessDetails] = useState();
   const [rating, setRating] = useState(0);
@@ -100,7 +98,6 @@ export default function ContactUs() {
       name: name,
       userId: userId,
       message: e.target.message.value,
-      Id: id,
       image: null, // Placeholder for the image data
     };
     if (selectedFile.myFile!=='') {
@@ -150,8 +147,6 @@ export default function ContactUs() {
     formData.append("userId", requestData.userId);
     formData.append("email", requestData.email);
     formData.append("message", requestData.message);
-    formData.append("cid", requestData.cid);
-    formData.append("Id", requestData.Id);
     formData.append("rating", requestData.rating);
     if(requestData.image!=null){
       formData.append("image", requestData.image);

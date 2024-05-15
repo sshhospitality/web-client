@@ -25,6 +25,7 @@ import VendorMessDetails from './pages/VendorPages/VMessDetails';
 import VStudentList from './pages/VendorPages/VStudentList';
 import VProfile from './pages/VendorPages/VProfile';
 import VStuHistory from './pages/VendorPages/VStuHistory';
+import VPoll from './pages/VendorPages/VPoll';
 
 
 import DDashboard from './pages/Department/DDashboard';
@@ -132,6 +133,7 @@ export default function Router() {
       children: [
         { path: '', element: <Navigate to="/vendor/dashboard" /> },
         { path: 'dashboard', element: <VDashboard /> },
+        { path: 'poll', element: <VPoll /> },
         { path: 'departmentRegister', element: <VDepartmentRegister /> },
         { path: 'departmentList', element: <VDepartmentList /> },
         { path: 'feedback', element: <VFeedback /> },

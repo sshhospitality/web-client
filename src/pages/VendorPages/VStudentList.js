@@ -190,10 +190,6 @@ export default function UserPage() {
     phone: num.phone,
     isEnrolled: num.isEnrolled,
   }));
-  // const users = {
-  //   stud: 'nishant',
-  //   userId: 12241170
-  // }
   const handleUserClick = () => {
     // setSelected(user);
     console.log('helo', selected);

@@ -57,6 +57,11 @@ const navConfig = [
     icon: icon('ic_feedback'),
   },
   {
+    title: 'Poll',
+    path: '/vendor/poll',
+    icon: icon('ic_lock'),
+  },
+  {
     title: 'Profile',
     path: '/vendor/profile',
     icon: icon('ic_lock'),

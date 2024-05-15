@@ -31,7 +31,6 @@ export default function AccountPopover() {
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
-  const [cookies, setCookie, removeCookie] = useCookies();
 
   const navigate = useNavigate();
  
@@ -43,7 +42,6 @@ export default function AccountPopover() {
       });
       localStorage.clear();
       sessionStorage.clear();
-      removeCookie('token');
       navigate('/login', { replace: true });
     } catch (error) {
       console.error('Logout failed', error);

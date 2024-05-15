@@ -59,7 +59,7 @@ export default function ContactUs() {
 
   // Retrieve user details from local storage
   const userId = localStorage.getItem('id');
-  const email = localStorage.getItem('email');
+  const email = localStorage.getItem('Email');
   const name = localStorage.getItem('name');
   // State variables for storing mess details, selected rating, and uploaded image
   const [messDetails, setMessDetails] = useState();

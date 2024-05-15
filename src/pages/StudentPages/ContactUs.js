@@ -59,7 +59,7 @@ export default function ContactUs() {
 
   // Retrieve user details from local storage
   const userId = localStorage.getItem('id');
-  const email = localStorage.getItem('email');
+  const email = localStorage.getItem('Email');
   const name = localStorage.getItem('name');
   const collegeId = localStorage.getItem('collegeId');
   const id = localStorage.getItem('userId');

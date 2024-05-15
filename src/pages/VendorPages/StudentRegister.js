@@ -31,9 +31,8 @@ export default function StudentRegister() {
         // Then send data to backend API for each student
         sendDataToBackend(name, email, password, userId,year,department,phone);
       });
-      handleCustomAlert('Registration Successful', '', 'success');
     };
-
+    handleCustomAlert('Registration Successful', '', 'success');
     reader.onerror = () => {
       console.error('Error reading file');
     };

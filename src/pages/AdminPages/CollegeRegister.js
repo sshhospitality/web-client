@@ -107,7 +107,7 @@ export default function CollegeRegister() {
       setIsLoading(true);
       try {
         const responce = await axios.post(
-          `${process.env.REACT_APP_API}/college/college_post`,
+          `${process.env.REACT_APP_API}/auth/signup`,
           { email, password, cid, name, person: "College",address,phone },
           { withCredentials: true }
         );

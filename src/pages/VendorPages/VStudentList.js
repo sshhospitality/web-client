@@ -51,6 +51,7 @@ const TABLE_HEAD = [
   { id: 'year', label: 'Year', alignRight: false },
   { id: 'phone', label: 'Phone Number', alignRight: false },
   { id: 'isEnrolled', label: 'Is Enrolled', alignRight: false },
+  { id: 'preference', label: 'Preference', alignRight: false},
   { id: 'Actions', label: 'Actions', alignRight: false },
 
   // { id: 'mode', label : 'Mode', alignRight: false },
@@ -189,6 +190,7 @@ export default function UserPage() {
     year: num.year,
     phone: num.phone,
     isEnrolled: num.isEnrolled,
+    preference: num.preference
   }));
   const handleUserClick = () => {
     // setSelected(user);
@@ -300,7 +302,7 @@ export default function UserPage() {
     doc.setFontSize(15);
 
     const title = 'Student List';
-    const headers = [['Name', 'Id', 'Year', 'Department', 'Phone', 'Enrolled']];
+    const headers = [['Name', 'Id', 'Year', 'Department', 'Phone', 'Enrolled', 'Preference']];
 
     const data = stud.map((student) => [
       student.name,
@@ -309,6 +311,7 @@ export default function UserPage() {
       student.department,
       student.phone,
       student.isEnrolled ? 'True' : ' False',
+      student.preference
     ]);
 
     const content = {
@@ -386,7 +389,7 @@ export default function UserPage() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, stud, userId, department, year, phone, isEnrolled } = row;
+                    const { id, stud, userId, department, year, phone, isEnrolled, preference } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox">
@@ -408,6 +411,7 @@ export default function UserPage() {
                         <TableCell align="left">{year}</TableCell>
                         <TableCell align="left">{phone}</TableCell>
                         <TableCell align="left">{isEnrolled ? 'True' : ' False'}</TableCell>
+                        <TableCell align="left">{preference}</TableCell>
                         <TableCell align="left">
                           <IconButton onClick={(event) => handleOpenMenu(event, row)}>
                             <Iconify icon={'eva:more-vertical-fill'} />
@@ -561,6 +565,20 @@ export default function UserPage() {
             >
               <MenuItem value={true}>True</MenuItem>
               <MenuItem value={false}>False</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl fullWidth margin="dense">
+            <InputLabel id="is-enrolled-label">Preference</InputLabel>
+            <Select
+              value={editedDetails.preference} // Use editedDetails.isEnrolled directly
+              onChange={(event) => setEditedDetails({ ...editedDetails, preference: event.target.value })} // Update isEnrolled directly
+              fullWidth
+              margin="dense"
+              id="preference"
+              label="Preference"
+            >
+              <MenuItem value={"Veg"}>Veg</MenuItem>
+              <MenuItem value={"Non-Veg"}>Non-Veg</MenuItem>
             </Select>
           </FormControl>
         </DialogContent>

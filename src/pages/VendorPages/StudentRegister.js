@@ -16,6 +16,7 @@ export default function StudentRegister() {
   const [year, setYear] = useState('');
   const [department, setDepartment] = useState('');
   const [phone, setPhone] = useState('');
+  const [preference, setPreference] = useState('');
 
   const handleFile = useCallback((e) => {
     const file = e.target.files[0];
@@ -26,10 +27,10 @@ export default function StudentRegister() {
       const rows = csv.split('\n').slice(1); // skip header
 
       rows.forEach((row) => {
-        const [sNo, name, email, password, userId,year,department,phone] = row.split(',');
+        const [sNo, name, email, password, userId,year,department,phone, preference] = row.split(',');
         // Perform validation if needed
         // Then send data to backend API for each student
-        sendDataToBackend(name, email, password, userId,year,department,phone);
+        sendDataToBackend(name, email, password, userId,year,department,phone, preference);
       });
     };
     handleCustomAlert('Registration Successful', '', 'success');
@@ -39,7 +40,7 @@ export default function StudentRegister() {
 
     reader.readAsText(file);
   }, []);
-  const sendDataToBackend = useCallback(async (name, email, password, userId,year,department,phone) => {
+  const sendDataToBackend = useCallback(async (name, email, password, userId,year,department,phone, preference) => {
     // You can use fetch API or any other method to send data to your backend API
     // Example using fetch API:
     if (name === '' || userId === '' || email === '' || password === '' || year === '' || department === '' || phone === '') {
@@ -57,7 +58,7 @@ export default function StudentRegister() {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/auth/signup`,
-        { email, password, userId, name, person: 'Student',year,department,phone },
+        { email, password, userId, name, person: 'Student',year,department,phone, preference },
         { withCredentials: true }
       );
       // if (responce.status === 200) {
@@ -93,7 +94,7 @@ export default function StudentRegister() {
       try {
         const responce = await axios.post(
           `${process.env.REACT_APP_API}/auth/signup`,
-          { email, password, userId, name, person: 'Student' ,year,department,phone},
+          { email, password, userId, name, person: 'Student' ,year,department,phone, preference},
           { withCredentials: true }
         );
         if (responce.status === 200) {
@@ -106,6 +107,7 @@ export default function StudentRegister() {
         setUserId('');
         setYear('');
         setPhone('');
+        setPreference('');
       } catch (error) {
         console.log(error);
       } finally {
@@ -200,6 +202,21 @@ export default function StudentRegister() {
               value={phone}
               onChange={(event) => setPhone(event.target.value)}
             />
+          </Grid>
+          <Grid item xs={12} md={12}>
+            <FormControl variant="standard" fullWidth>
+            <InputLabel id="preference-label">Preference</InputLabel>
+            <Select
+              labelId="preference-label"
+              id="preference"
+              value={preference}
+              onChange={(event) => setPreference(event.target.value)}
+              label="Preference"
+            >
+              <MenuItem value={"Veg"}>Veg</MenuItem>
+              <MenuItem value={"Non-Veg"}>Non-Veg</MenuItem>
+            </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={12} md={12} display={'flex'} justifyContent={'end'}>
             <Button

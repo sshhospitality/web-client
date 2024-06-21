@@ -47,6 +47,7 @@ const TABLE_HEAD = [
   { id: 'cid', label: 'CId', alignRight: false },
   { id: 'address', label: 'Address', alignRight: false },
   { id: 'phone', label: 'Phone Number', alignRight: false },
+  { id: 'email', label: 'Email', alignRight: false },
   { id: 'Actions', label: 'Actions', alignRight: false },
 ];
 
@@ -148,13 +149,15 @@ export default function CollegeList() {
     setOrderBy(property);
   };
 
-  const colleges = college.map((num, index) => ({
+  const colleges = college.map((num) => ({
     id: num._id,
     name: num.name,
     cid: num.cid,
     address: num.address,
     phone: num.phone,
+    email: num.email,
   }));
+
   const handleUserClick = () => {
     setIsEditDialogOpen(true);
   };
@@ -300,7 +303,7 @@ export default function CollegeList() {
                 />
                 <TableBody>
                   {filteredColleges.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, cid,phone, address } = row;
+                    const { id, name, cid,phone, address, email } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox">
@@ -320,6 +323,7 @@ export default function CollegeList() {
                         <TableCell align="left">{cid}</TableCell>
                         <TableCell align="left">{address}</TableCell>
                         <TableCell align="left">{phone}</TableCell>
+                        <TableCell align="left">{email}</TableCell>
                         <TableCell align="left">
                           <IconButton onClick={(event) => handleOpenMenu(event, row)}>
                             <Iconify icon={'eva:more-vertical-fill'} />
@@ -450,6 +454,15 @@ export default function CollegeList() {
             value={editedDetails.phone || selected?.phone || ''}
             onChange={handleInputChange}
           />
+          <TextField
+              margin="dense"
+              name="email"
+              label="Email"
+              type="text"
+              fullWidth
+              value={editedDetails.email || selected?.email || ''}
+              onChange={handleInputChange}
+            />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose}>Cancel</Button>

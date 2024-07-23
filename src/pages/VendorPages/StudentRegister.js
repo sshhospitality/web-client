@@ -33,8 +33,7 @@ export default function StudentRegister() {
         sendDataToBackend(name, email, password, userId,year,department,phone, preference);
       });
     };
-    handleCustomAlert('Registration Successful', '', 'success');
-    reader.onerror = () => {
+        reader.onerror = () => {
       console.error('Error reading file');
     };
 
@@ -65,6 +64,7 @@ export default function StudentRegister() {
       handleCustomAlert('Registration Successful', '', 'success');
       }
     } catch (error) {
+      handleCustomAlert('Registration Failed', error.msg, 'danger');
       console.log(error);
     } finally {
       setIsLoading(false);

@@ -43,7 +43,7 @@ export default function StudentRegister() {
   const sendDataToBackend = useCallback(async (name, email, password, userId,year,department,phone, preference) => {
     // You can use fetch API or any other method to send data to your backend API
     // Example using fetch API:
-    if (name === '' || userId === '' || email === '' || password === '' || year === '' || department === '' || phone === '') {
+    if (name === '' || userId === '' || email === '' || password === '' || year === '' || department === '' || phone === '' || preference === '') {
       handleCustomAlert('Empty Field', 'Please fill all the fields', 'danger');
       return;
     }
@@ -61,9 +61,9 @@ export default function StudentRegister() {
         { email, password, userId, name, person: 'Student',year,department,phone, preference },
         { withCredentials: true }
       );
-      // if (responce.status === 200) {
-      // handleCustomAlert('Registration Successful', '', 'success');
-      // }
+      if (response.status === 200) {
+      handleCustomAlert('Registration Successful', '', 'success');
+      }
     } catch (error) {
       console.log(error);
     } finally {
